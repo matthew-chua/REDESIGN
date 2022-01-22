@@ -1,15 +1,16 @@
 const express = require('express')
 const mongoose = require('mongoose')
+require('dotenv').config();
 
 const User = require("./Models/userSchema");
 const Loan = require("./Models/loanSchema");
 
-
 const app = express();
 const port = 3000;
 
-//should prolly put the user and password in the env later on lulz
-const dbURL = 'mongodb+srv://supermarios:JASONJASON@cluster0.wjvqv.mongodb.net/redesign '
+const password =  process.env.MONGO_PASSWORD;
+const username =  process.env.MONGO_USER;
+const dbURL = `mongodb+srv://${username}:${password}@cluster0.wjvqv.mongodb.net/redesign`
 
 //connect to mongoose
 mongoose.connect(dbURL )
@@ -20,7 +21,8 @@ mongoose.connect(dbURL )
     console.log("ERROR", err)
 })
 
-//create user document
+
+// create user document
 app.get('/createUser', (req, res)=>{
     const user = new User({
         userID: "122345",
@@ -40,7 +42,9 @@ app.get('/createUser', (req, res)=>{
     });
 })
 
-//create loan document
+
+
+// create loan
 app.get('/createLoan', (req, res)=>{
     const loan = new Loan({
         userID: "122345",
@@ -60,6 +64,15 @@ app.get('/createLoan', (req, res)=>{
     });
 })
 
+
+//ban user logic
+//include the EOD logic here also
+//call banUser for both user and loan collections
+
+
+//unlock trolley logic
+//call the createLoan
+//talk to microcontroller
 
 
 app.get('/', (req, res) => {
