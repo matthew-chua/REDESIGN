@@ -1,11 +1,30 @@
+:root {
+  --red: #D4484C;
+  --lightGreen: #F3F9EF;
+  --brightGreen: #96CC39;
+  --lightBlue: #B2D9DB;
+  --mediumBlue: #517A9A;
+  --darkBlue: #223554;
+  --grey: #606E7B;
+  --padding: 1rem;
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: var(--lightGreen);
+  margin: 48px 48px 0 48px;
+  font-family: Futura, "Trebuchet MS", Arial, sans-serif; 
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+h1 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1; margin: 0; color: var(--darkBlue);} 
+h3 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1.2; margin: 0; color: var(--grey);} 
+p { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 1; } 
+blockquote { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
+pre { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+button { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 600; line-height: 1.2; height: 3rem; width: 100%; border-radius: 24px;border-width: 0;} 
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
