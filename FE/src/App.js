@@ -1,15 +1,24 @@
-import logo from "./logo.svg";
 import "./App.css";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  // Navigate,
+} from "react-router-dom";
+import LoginPage from "./Login/LoginPage";
+// import LoanPage from "./Loan/LoanPage";
+import LandingPage from "./Landing/LandingPage";
 
 function App() {
   return (
-    <div>
-      <h1>Test h1</h1>
-      <h3>Test h3</h3>
-      <button>Test Button</button>
-      <a>Test link</a>
-      Test body
-    </div>
+    <Router>
+      {/* <NavBar /> */}
+      <Routes>
+        <Route path="/" element={<LandingPage />}>
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

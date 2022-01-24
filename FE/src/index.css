@@ -6,6 +6,7 @@
   --mediumBlue: #517A9A;
   --darkBlue: #223554;
   --grey: #606E7B;
+  --lightGrey: #E5E5E5;
   --padding: 1rem;
 }
 
@@ -18,14 +19,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1; margin: 0; color: var(--darkBlue);} 
-h3 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1.2; margin: 0; color: var(--grey);} 
+h1 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1; margin: 0.75rem 0; color: var(--darkBlue);} 
+h3 { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 1.2; margin: 0.5rem 0; color: var(--grey);} 
 p { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 1; } 
 blockquote { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
 pre { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
-button { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 600; line-height: 1.2; height: 3rem; width: 100%; border-radius: 24px;border-width: 0;} 
-
-
+button { font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 600; line-height: 1.2; height: 3rem; width: 100%; border-radius: 24px;border-width: 0; cursor: pointer; background-color: var(--darkBlue); color: white; transition: 200ms;} 
+button:hover {   box-shadow: 0 0.5em 0.5em -0.4em var(--mediumBlue);
+  transform: translateY(-0.25em);}
+a {font-family: Futura, "Trebuchet MS", Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 1; color: var(--mediumBlue);}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
