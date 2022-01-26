@@ -14,13 +14,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    verified: {
+    warning: {
         type: Boolean,
-        required: true
+        required: false
     },
     banned: {
         type: Boolean,
-        required: true
+        required: false
     },
 }, { timestamps: true })
 

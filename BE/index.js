@@ -1,13 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose')
-require('dotenv').config();
-
-const User = require("./Models/userSchema");
-const Loan = require("./Models/loanSchema");
-
 const app = express();
 const port = 3000;
 
+//message bird stuff
+const exphbs = require('express-handlebars');
+const bodyParser = require('body-parser');
+var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
+
+//models
+const User = require("./Models/userSchema");
+const Loan = require("./Models/loanSchema");
+
+//db config
+require('dotenv').config();
 const password =  process.env.MONGO_PASSWORD;
 const username =  process.env.MONGO_USER;
 const dbURL = `mongodb+srv://${username}:${password}@cluster0.wjvqv.mongodb.net/redesign`
@@ -25,11 +31,11 @@ mongoose.connect(dbURL )
 // create user document
 app.get('/createUser', (req, res)=>{
     const user = new User({
-        userID: "122345",
+        userID: "newid",
         name: "new matt",
         phoneNumber: "12345678",
-        verified: false,
-        banned: false
+        banned: false,
+        warning: false
 
     });
 
@@ -42,17 +48,32 @@ app.get('/createUser', (req, res)=>{
     });
 })
 
+//ban user
+app.get('/banUser', (req, res) => {
+    const document = {userID: 'newid'}
+    const update = {banned: true};
+
+    User.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch(
+        (err)=>{
+            console.log(err);
+        }
+    )
+})
+
 
 
 // create loan
 app.get('/createLoan', (req, res)=>{
+    const date = new Date();
     const loan = new Loan({
-        userID: "122345",
-        loanID: "testID",
-        borrowDate: "12/12/12",
-        returned: false,
-        banned: false,
-        warning: false
+        userID: "newid",
+        loanID: "newloadnid",
+        trolleyID: "newtrolleyid",
+        borrowDate: date,
+        returned: false
     });
 
     loan.save()
@@ -64,15 +85,19 @@ app.get('/createLoan', (req, res)=>{
     });
 })
 
+app.get('/returnTrolley', (req, res) => {
+    const document = {userID: "newid"}
+    const update = {returned: true};
 
-//ban user logic
-//include the EOD logic here also
-//call banUser for both user and loan collections
-
-
-//unlock trolley logic
-//call the createLoan
-//talk to microcontroller
+    Loan.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch(
+        (err)=>{
+            console.log(err);
+        }
+    )
+})
 
 
 app.get('/', (req, res) => {

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const loanSchema = new Schema({
     userID: {
         type: String,
         required: true
@@ -10,23 +10,19 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    borrowDate: {
+    trolleyID: {
         type: String,
+        required: true
+    },
+    borrowDate: {
+        type: Date,
         required: true
     },
     returned: {
         type: Boolean,
         required: true
-    },
-    warning: {
-        type: Boolean,
-        required: true
-    },
-    banned: {
-        type: Boolean,
-        required: true
-    },
+    }
 }, { timestamps: true })
 
-const LOAN = mongoose.model('Loan', userSchema);
+const LOAN = mongoose.model('Loan', loanSchema);
 module.exports = LOAN; 
