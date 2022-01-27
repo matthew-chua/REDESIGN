@@ -6,11 +6,17 @@ const port = 3000;
 //message bird stuff
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
-var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
+// var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
+var messagebird = require('messagebird')('INPUT_KEY_HERE')
+// vid has this for messagebird
+app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+app.use(bodyParser.urlencoded({extended : true }));
 
 //models
 const User = require("./Models/userSchema");
 const Loan = require("./Models/loanSchema");
+// const e = require('express');
 
 //db config
 require('dotenv').config();
@@ -106,4 +112,55 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
+});
+
+
+// MESSAGEBIRD STUFF 
+// Display page to ask the user for their phone number
+app.get('/step1', function(req, res) {
+    res.render('step1');
+});
+
+// Handle phone number submission 
+app.post('/step2', function(req, res) {
+    var number = req.body.number; 
+
+    // make request to verify API
+    messagebird.verify.create(number, {
+        template : "Your verification code is %token."
+    }, function(err, response) {
+        if (err) {
+            // request has failed
+            console.log(err); 
+            res.render('step1', {
+                error : err.errors[0].description
+            });
+        } else {
+            // request was successful 
+            console.log(response);
+            res.render('step2', {
+                id : response.id
+            });
+        }
+    });
+});
+
+// Verify whether the token is correct 
+app.post('/step3', function(req, res) {
+    var id = req.body.id; 
+    var token = req.body.token;
+
+    // Make request to Verify API
+    messagebird.verify.verify(id, token, function(err, response) {
+        if (err) {
+            // Verification has failed
+            res.render('step2', {
+                error: err.errors[0].description, 
+                id : id
+            });
+        } else {
+            // Verification was successful 
+            res.render('step3');
+        }
+    });
 });
