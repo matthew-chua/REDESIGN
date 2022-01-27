@@ -3,10 +3,10 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  // Navigate,
+  Navigate,
 } from "react-router-dom";
 import LoginPage from "./Login/LoginPage";
-// import LoanPage from "./Loan/LoanPage";
+import LoanPage from "./Loan/LoanPage";
 import LandingPage from "./Landing/LandingPage";
 
 function App() {
@@ -14,9 +14,12 @@ function App() {
     <Router>
       {/* <NavBar /> */}
       <Routes>
-        <Route path="/" element={<LandingPage />}>
-          <Route path="login" element={<LoginPage />} />
-        </Route>
+        <Route exact path="/home" element={<LandingPage/>} />
+        <Route exact path="login" element={<LoginPage/>} />
+        <Route exact path="loan" element={<LoanPage/>} />
+        <Route path="/" element={<Navigate to='/home'/>}/>
+        
+        
       </Routes>
     </Router>
   );

@@ -1,0 +1,22 @@
+.root{
+    display: flex;
+    flex-direction: column;   
+}
+.icon{
+    font-size: 50vw;
+}
+.iconError{
+    font-size: 50vw;
+    color: red;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.innerContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
