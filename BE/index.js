@@ -41,8 +41,6 @@ app.get('/createUser', (req, res)=>{
         name: "new matt",
         phoneNumber: "12345678",
         banned: false,
-        warning: false
-
     });
 
     user.save()
@@ -56,10 +54,24 @@ app.get('/createUser', (req, res)=>{
 
 //ban user
 app.get('/banUser', (req, res) => {
-    const document = {userID: 'newid'}
-    const update = {banned: true};
+    const document = {userID: req.get('id')}
+    const update = {banned: req.get('banned')};
 
     User.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch(
+        (err)=>{
+            console.log(err);
+            res.send(err)
+        }
+    )
+})
+
+// fetch user
+app.get('/fetchUserDetails', (req, res) => {
+    const document = {userID: req.get('id')}
+    User.findOne(document)
     .then((result)=>{
         res.send(result)
     }).catch(
@@ -75,11 +87,11 @@ app.get('/banUser', (req, res) => {
 app.get('/createLoan', (req, res)=>{
     const date = new Date();
     const loan = new Loan({
-        userID: "test",
-        loanID: "test1",
-        trolleyID: "newtrolleyid",
+        userID: req.get('userID'),
+        loanID: req.get('loanID'),
+        trolleyID: req.get('trolleyID'),
         borrowDate: date,
-        returned: false
+        returned: req.get('returned')
     });
 
     loan.save()
@@ -91,11 +103,27 @@ app.get('/createLoan', (req, res)=>{
     });
 })
 
+//end the loan (return the trolley)
+app.get('/endLoan', (req, res) => {
+    const document = {userID: req.get('userID')}
+    const update = {returned: true};
+
+    Loan.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch(
+        (err)=>{
+            console.log(err);
+        }
+    )
+})
+
+
 app.get('/createTrolley', (req, res)=>{
     const trolley = new Trolley({
-        trolleyID: 1,
-        shouldUnlock: false,
-        isUnlocked: false
+        trolleyID: req.get('trolleyID'),
+        shouldUnlock: req.get('shouldUnlock'),
+        isUnlocked: req.get('isUnlocked')
     });
 
     trolley.save()
@@ -108,7 +136,7 @@ app.get('/createTrolley', (req, res)=>{
 })
 
 app.get('/setShouldUnlock', (req, res)=>{
-    const document = {trolleyID: 1}
+    const document = {trolleyID: req.get('trolleyID')}
     const update = {shouldUnlock: true}
 
     Trolley.findOneAndUpdate(document, update)
@@ -121,7 +149,7 @@ app.get('/setShouldUnlock', (req, res)=>{
 
 
 app.get('/setIsUnlocked', (req, res)=>{
-    const document = {trolleyID: 1}
+    const document = {trolleyID: req.get('trolleyID')}
     const update = {isUnlocked: true}
 
     Trolley.findOneAndUpdate(document, update)
@@ -132,8 +160,9 @@ app.get('/setIsUnlocked', (req, res)=>{
     })
 })
 
+
 app.get('/returnTrolley', (req, res)=>{
-    const document = {trolleyID: 1}
+    const document = {trolleyID: req.get('trolleyID')}
     const update = {
         isUnlocked: false,
         shouldUnlock: false
@@ -145,20 +174,6 @@ app.get('/returnTrolley', (req, res)=>{
     }).catch((err)=>{
         console.log(err)
     })
-})
-
-app.get('/endLoan', (req, res) => {
-    const document = {userID: "newid"}
-    const update = {returned: true};
-
-    Loan.findOneAndUpdate(document, update)
-    .then((result)=>{
-        res.send(result)
-    }).catch(
-        (err)=>{
-            console.log(err);
-        }
-    )
 })
 
 

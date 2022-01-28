@@ -14,10 +14,6 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    warning: {
-        type: Boolean,
-        required: false
-    },
     banned: {
         type: Boolean,
         required: false
