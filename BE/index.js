@@ -37,10 +37,10 @@ mongoose.connect(dbURL )
 // create user document
 app.get('/createUser', (req, res)=>{
     const user = new User({
-        userID: "newid",
-        name: "new matt",
-        phoneNumber: "12345678",
-        banned: false,
+        userID: req.get('userID'),
+        name: req.get('name'),
+        phoneNumber: req.get('phoneNumber'),
+        banned: req.get('banned'),
     });
 
     user.save()
@@ -54,7 +54,7 @@ app.get('/createUser', (req, res)=>{
 
 //ban user
 app.get('/banUser', (req, res) => {
-    const document = {userID: req.get('id')}
+    const document = {userID: req.get('userID')}
     const update = {banned: req.get('banned')};
 
     User.findOneAndUpdate(document, update)
@@ -70,7 +70,7 @@ app.get('/banUser', (req, res) => {
 
 // fetch user
 app.get('/fetchUserDetails', (req, res) => {
-    const document = {userID: req.get('id')}
+    const document = {userID: req.get('userID')}
     User.findOne(document)
     .then((result)=>{
         res.send(result)
