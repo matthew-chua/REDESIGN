@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({extended : true }));
 //models
 const User = require("./Models/userSchema");
 const Loan = require("./Models/loanSchema");
-// const e = require('express');
+const Trolley = require("./Models/trolleySchema");
 
 //db config
 require('dotenv').config();
@@ -75,8 +75,8 @@ app.get('/banUser', (req, res) => {
 app.get('/createLoan', (req, res)=>{
     const date = new Date();
     const loan = new Loan({
-        userID: "newid",
-        loanID: "newloadnid",
+        userID: "test",
+        loanID: "test1",
         trolleyID: "newtrolleyid",
         borrowDate: date,
         returned: false
@@ -91,7 +91,63 @@ app.get('/createLoan', (req, res)=>{
     });
 })
 
-app.get('/returnTrolley', (req, res) => {
+app.get('/createTrolley', (req, res)=>{
+    const trolley = new Trolley({
+        trolleyID: 1,
+        shouldUnlock: false,
+        isUnlocked: false
+    });
+
+    trolley.save()
+    .then((result)=>{
+        res.send(result)
+    })
+    .catch((err)=>{
+        console.log(err)
+    });
+})
+
+app.get('/setShouldUnlock', (req, res)=>{
+    const document = {trolleyID: 1}
+    const update = {shouldUnlock: true}
+
+    Trolley.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch((err)=>{
+        console.log(err)
+    })
+})
+
+
+app.get('/setIsUnlocked', (req, res)=>{
+    const document = {trolleyID: 1}
+    const update = {isUnlocked: true}
+
+    Trolley.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch((err)=>{
+        console.log(err)
+    })
+})
+
+app.get('/returnTrolley', (req, res)=>{
+    const document = {trolleyID: 1}
+    const update = {
+        isUnlocked: false,
+        shouldUnlock: false
+    }
+
+    Trolley.findOneAndUpdate(document, update)
+    .then((result)=>{
+        res.send(result)
+    }).catch((err)=>{
+        console.log(err)
+    })
+})
+
+app.get('/endLoan', (req, res) => {
     const document = {userID: "newid"}
     const update = {returned: true};
 
