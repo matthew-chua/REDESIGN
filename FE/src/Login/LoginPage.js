@@ -11,6 +11,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [OTP, setOTP] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [OTPError, setOTPError] = useState(false);
 
   const [userState, setUserState] = useState({
     name: "",
@@ -47,6 +48,7 @@ export default function LoginPage() {
   };
 
   const page2NextHandler = () => {
+    setOTPError(false)
     verifyOTP();
 
     //redirect if verification is successful
@@ -54,6 +56,7 @@ export default function LoginPage() {
     setDisabled(true);
 
     //else set error state
+    setOTPError(true)
   };
 
   const createUserHandler = () => {
@@ -87,7 +90,7 @@ export default function LoginPage() {
         setDisabled(true);
       }
     }
-  }, [userState, OTP]);
+  }, [userState, OTP, pageState]);
 
   return (
     <div className={classes.root}>
@@ -97,7 +100,6 @@ export default function LoginPage() {
           <h3>We will send you a confirmation code</h3>
           <TextField
             onChange={inputNumberHandler}
-            className={classes.input}
             value={userState.phoneNumber}
             placeholder="+65 8123 4567"
           />
@@ -107,8 +109,7 @@ export default function LoginPage() {
           </Button>
           <p className={classes.bottomText}>
             By signing up, you agree with our <br /> <a>Terms and Conditions</a>{" "}
-            and {" "}
-            <a>Privacy Policy</a>
+            and <a>Privacy Policy</a>
           </p>
         </div>
       )}
@@ -122,14 +123,18 @@ export default function LoginPage() {
           </h3>
           <TextField
             onChange={OTPHandler}
-            className={classes.input}
             value={OTP}
             placeholder="Your code here"
+            error={OTPError}
+            setError={setOTPError}
+            errorText="Wrong code entered! Please try again."
           ></TextField>
           <Button onClickHandler={page2NextHandler} isDisabled={disabled}>
             Verify
           </Button>
-          <p className={classes.bottomText}>Didn't receive code? Resend</p>
+          <p className={classes.bottomText}>
+            Didn't receive code? <a>Resend</a>
+          </p>
         </div>
       )}
 
@@ -139,7 +144,6 @@ export default function LoginPage() {
           <h3>Enter your full name</h3>
           <TextField
             onChange={nameHandler}
-            className={classes.input}
             placeholder="eg. John Doe"
           />
           <Button onClickHandler={createUserHandler} isDisabled={disabled}>
