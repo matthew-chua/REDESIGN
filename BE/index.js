@@ -1,30 +1,41 @@
+// Imports
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser');
+require('dotenv').config();
+
+// App Setup
 const app = express();
 const port = 3000;
+app.use(express.urlencoded({extended : true }));
+app.use(express.json());
+
+
 
 //message bird stuff
-const exphbs = require('express-handlebars');
-const bodyParser = require('body-parser');
-// var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
-var messagebird = require('messagebird')('INPUT_KEY_HERE')
-// vid has this for messagebird
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-app.use(bodyParser.urlencoded({extended : true }));
 
-//models
-const User = require("./Models/userSchema");
+// const exphbs = require('express-handlebars');
+// var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
+// var messagebird = require('messagebird')('INPUT_KEY_HERE')
+// vid has this for messagebird
+// app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+// app.set('view engine', 'handlebars');
+
+
+
+
+// Models
+const User = require("./User/userSchema");
 const Loan = require("./Models/loanSchema");
 const Trolley = require("./Models/trolleySchema");
+const userRoutes = require("./User/userRoutes");
 
-//db config
-require('dotenv').config();
+// DB Config
 const password =  process.env.MONGO_PASSWORD;
 const username =  process.env.MONGO_USER;
 const dbURL = `mongodb+srv://${username}:${password}@cluster0.wjvqv.mongodb.net/redesign`
 
-//connect to mongoose
+// Connect to mongoose
 mongoose.connect(dbURL )
 .then((result)=>{
     console.log("CONNECTED TO DB")
@@ -33,8 +44,15 @@ mongoose.connect(dbURL )
     console.log("ERROR", err)
 })
 
+// Routes
+app.use('/', require('./User/userRoutes'));
 
-// create user document
+
+
+
+
+
+// Create user document
 app.get('/createUser', (req, res)=>{
     const user = new User({
         userID: req.get('userID'),
@@ -193,28 +211,39 @@ app.get('/step1', function(req, res) {
 });
 
 // Handle phone number submission 
-app.post('/step2', function(req, res) {
-    var number = req.body.number; 
+// app.post('/step2', function(req, res) {
+//     var number = req.body.number; 
 
-    // make request to verify API
-    messagebird.verify.create(number, {
-        template : "Your verification code is %token."
-    }, function(err, response) {
-        if (err) {
-            // request has failed
-            console.log(err); 
-            res.render('step1', {
-                error : err.errors[0].description
-            });
-        } else {
-            // request was successful 
-            console.log(response);
-            res.render('step2', {
-                id : response.id
-            });
-        }
-    });
-});
+//     var params = {
+//         originator: 'YourName'
+//     };
+
+//     messagebird.verify.create('6597102601', params, function (err, response) {
+//     if (err) {
+//         return console.log(err);
+//     }
+//     console.log(response);
+//     res.send({doesItWork: "yes"})
+//     });
+//     // make request to verify API
+//     // messagebird.verify.create(number, {
+//     //     template : "Your verification code is %token."
+//     // }, function(err, response) {
+//     //     if (err) {
+//     //         // request has failed
+//     //         console.log(err); 
+//     //         res.render('step1', {
+//     //             error : err.errors[0].description
+//     //         });
+//     //     } else {
+//     //         // request was successful 
+//     //         console.log(response);
+//     //         res.render('step2', {
+//     //             id : response.id
+//     //         });
+//     //     }
+//     // });
+// });
 
 // Verify whether the token is correct 
 app.post('/step3', function(req, res) {
