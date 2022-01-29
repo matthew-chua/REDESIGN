@@ -1,4 +1,9 @@
-.disabled{
-    background-color: var(--grey);
-    color: var(--lightGrey);
+.disabled {
+  background-color: var(--grey);
+  color: var(--lightGrey);
+}
+.disabled:hover {
+  box-shadow: 0 0 0 0;
+  transform: translateY(0);
+  cursor: not-allowed;
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../Common/Button";
+import Checkbox from "../Common/Checkbox";
+import TextField from "../Common/TextField";
 import classes from "./LoginPage.module.css";
 
 export default function LoginPage() {
@@ -59,7 +61,7 @@ export default function LoginPage() {
     console.log(userState);
 
     //use returned object to store userobject in localstorage
-    
+
     //redirect to the loan page once done
     const path = "/loan";
     navigate(path);
@@ -93,24 +95,20 @@ export default function LoginPage() {
         <div className={classes.page1root}>
           <h1> Enter your mobile number</h1>
           <h3>We will send you a confirmation code</h3>
-          <input
+          <TextField
             onChange={inputNumberHandler}
             className={classes.input}
             value={userState.phoneNumber}
             placeholder="+65 8123 4567"
           />
-
-          <div className={classes.rememberMe}>
-            <input type="radio"></input>
-            <p>Remember me</p>
-          </div>
+          <Checkbox text={"Stay signed in"} initialState={true} />
           <Button onClickHandler={page1NextHandler} isDisabled={disabled}>
             Next
           </Button>
-
           <p className={classes.bottomText}>
-            By signing up, you agree with our <br /> Terms and Conditions and
-            Privacy Policy
+            By signing up, you agree with our <br /> <a>Terms and Conditions</a>{" "}
+            and {" "}
+            <a>Privacy Policy</a>
           </p>
         </div>
       )}
@@ -122,11 +120,12 @@ export default function LoginPage() {
             We sent the code to <br />
             {userState.phoneNumber}
           </h3>
-          <input
+          <TextField
             onChange={OTPHandler}
             className={classes.input}
             value={OTP}
-          ></input>
+            placeholder="Your code here"
+          ></TextField>
           <Button onClickHandler={page2NextHandler} isDisabled={disabled}>
             Verify
           </Button>
@@ -138,7 +137,7 @@ export default function LoginPage() {
         <div className={classes.page3root}>
           <h1>Create Account</h1>
           <h3>Enter your full name</h3>
-          <input
+          <TextField
             onChange={nameHandler}
             className={classes.input}
             placeholder="eg. John Doe"

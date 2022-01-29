@@ -7,7 +7,7 @@ export default function Button(props) {
   };
   return (
     <button
-      className={isDisabled && classes.disabled}
+      className={isDisabled ? classes.disabled : ""}
       onClick={onClickHandler}
       disabled={isDisabled}
     >

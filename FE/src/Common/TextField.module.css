@@ -1,0 +1,24 @@
+.input {
+  background: transparent;
+  border: none;
+  height: 3rem;
+  font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0.75rem 0;
+  color: var(--darkBlue);
+}
+.input::placeholder {
+  font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0.75rem 0;
+  color: #757e87;
+  opacity: 61%;
+}
