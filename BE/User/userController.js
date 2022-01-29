@@ -2,8 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 // var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
+const User = require("./userSchema");
 
-// Sign In With User
+// Sign In With User -- User enters mobile number for sms to be sent
 const signInWithPhoneNumberHandler = (req, res) => {
   var phoneNumber = req.body.recipient;
   var params = {
@@ -12,7 +13,7 @@ const signInWithPhoneNumberHandler = (req, res) => {
     type: "sms",
     template: "yo matthew the code is *%token* pls tell me this works",
     timeout: "120",
-    tokenLength: "6"
+    tokenLength: "6",
   };
 
   messagebird.verify.create(phoneNumber, params, function (err, response) {
@@ -22,10 +23,11 @@ const signInWithPhoneNumberHandler = (req, res) => {
     }
     console.log(response);
     response = { ...response, success: true };
-    res.send(response)
+    res.send(response);
   });
 };
 
+// Verify OTP -- User enters OTP
 const verifyOTPHandler = (req, res) => {
   var id = req.body.id; // the id to use is from previous signInWithPhoneNunberHandler response.id (not response.message.id)
   var token = req.body.token;
@@ -34,7 +36,7 @@ const verifyOTPHandler = (req, res) => {
   messagebird.verify.verify(id, token, function (err, response) {
     if (err) {
       // Verification has failed
-      console.log("failed: ", err)
+      console.log("failed: ", err);
       res.send({ success: false });
     } else {
       // Verification was successful
@@ -46,7 +48,31 @@ const verifyOTPHandler = (req, res) => {
   });
 };
 
+// Create user from phone number and name
+const createUserHandler = (req, res) => {
+  const userId = Math.random().toString(16).slice(2);
+  console.log("userId: ", userId);
+
+  const user = new User({
+    userID: userId,
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    banned: false,
+  });
+  user
+    .save()
+    .then((result) => {
+        const response = {...result, success: true}
+      res.send(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+
 module.exports = {
   signInWithPhoneNumberHandler,
   verifyOTPHandler,
+  createUserHandler,
 };

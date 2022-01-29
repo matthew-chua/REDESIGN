@@ -1,20 +1,24 @@
-const express = require('express')
-const User = require("./userSchema");
+const express = require("express");
 
-// const app = express();
-const { signInWithPhoneNumberHandler, verifyOTPHandler } = require('./userController');
+const {
+  signInWithPhoneNumberHandler,
+  verifyOTPHandler,
+  createUserHandler,
+} = require("./userController");
 const router = express.Router();
 
 // Routes (They all should just be 1 line)
 
 // Sign in With Phone Number
-router.post('/signInWithPhoneNumber', signInWithPhoneNumberHandler)
+router.post("/signInWithPhoneNumber", signInWithPhoneNumberHandler);
 
 // Verify User Pin
-router.post('/verifyOTP', verifyOTPHandler)
+router.post("/verifyOTP", verifyOTPHandler);
 
-module.exports = router
+// Create User
+router.post("/createUser", createUserHandler);
 
+module.exports = router;
 
 // create user document
 // module.exports.creatUser = () => {
@@ -26,7 +30,7 @@ module.exports = router
 //             verified: false,
 //             banned: false
 //         });
-    
+
 //         user.save()
 //         .then((result)=>{
 //             res.send(result)
@@ -38,7 +42,6 @@ module.exports = router
 // }
 
 //ban user
-
 
 //unban user
 
