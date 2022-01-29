@@ -1,51 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./LoanPage.module.css";
 
 export default function LoanPage() {
-  //this should be pulled from auth??
-  const name = "Ivan Teo";
+  const [user, setUser] = useState({
+    name: "ivan teo",
+  });
 
   //represents state of loan
   //can be "locked", "unlocked" or "returned"
-  const [loanState, setLoanState] = useState("locked");
+  const [loanState, setLoanState] = useState("returned");
 
   const unlockHandler = () => {
     console.log("SEND SIGNAL TO BACKEND TO UNLOCK");
-    //insert logic here
-    
+    //createLoan with the trolleyID and the userID
+
     //insert try catch and update the loanState accordingly
     setLoanState("unlocked");
   };
 
+  useEffect(() => {
+    //fetch the userobject from localStorage
+    //set the userState
+  }, []);
+
   return (
     <div className={classes.root}>
-      <h1>Welcome, {name}</h1>
+      {loanState !== "returned" && <h1>Welcome, {user.name}!</h1>}
+      {loanState === "returned" && <h1>Thank you, {user.name}!</h1>}
+      
 
       <div className={classes.content}>
         {loanState === "locked" && (
           <div className={classes.innerContent}>
-          <p className={classes.icon}>
-            <i class="fa fa-lock" onClick={unlockHandler}></i>
-          </p>
-          <p>Press to unlock!</p>
+            <p className={classes.icon}>
+              <i class="fa fa-lock" onClick={unlockHandler}></i>
+            </p>
+            <p>Press to unlock!</p>
           </div>
         )}
 
         {loanState === "unlocked" && (
+          <div className={classes.innerContent}>
           <p className={classes.icon}>
             <i class="fa fa-unlock"></i>
           </p>
+          <h1>08:54</h1>
+          <h1>17 Jan 2021</h1>
+          <h3>Ready for use!</h3>
+          <p>Please return your trolley within 24 hours</p>
+          </div>
         )}
 
         {loanState === "error" && (
           <div className={classes.innerContent}>
-          <p className={classes.iconError}>
-            <i class="fa fa-lock"></i>
-          </p>
-          <p>Error, trolley is already unlocked</p>
+            <p className={classes.iconError}>
+              <i class="fa fa-lock"></i>
+            </p>
+            <p>Error, trolley is already unlocked</p>
           </div>
         )}
 
+        {loanState === "returned" && (
+          <div className={classes.innerContent}>
+            <p className={classes.iconReturned}>
+              <i class="fa fa-lock"></i>
+            </p>
+            <h3>Trolley Returned!</h3>
+          </div>
+        )}
       </div>
     </div>
   );

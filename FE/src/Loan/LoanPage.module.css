@@ -4,10 +4,18 @@
 }
 .icon{
     font-size: 50vw;
+    color: var(--darkBlue);
+    margin-bottom: 1rem;
 }
 .iconError{
     font-size: 50vw;
     color: red;
+    margin-bottom: 1rem;
+}
+.iconReturned{
+    font-size: 50vw;
+    color: green;
+    margin-bottom: 1rem;
 }
 
 .content{
