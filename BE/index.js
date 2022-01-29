@@ -33,7 +33,10 @@ mongoose
 // Routes
 
 // User Routes
-app.use("/", require("./User/userRoutes"));
+app.use("/user/", require("./User/userRoutes"));
+
+// Trolley Routes
+app.use("/trolley/", require("./Trolley/trolleyRoutes"));
 
 //ban user
 app.get("/banUser", (req, res) => {

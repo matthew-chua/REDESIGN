@@ -1,5 +1,3 @@
-const express = require("express");
-const bodyParser = require("body-parser");
 var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 // var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
 const User = require("./userSchema");
@@ -62,7 +60,7 @@ const createUserHandler = (req, res) => {
   user
     .save()
     .then((result) => {
-        const response = {...result, success: true}
+        const response = {...result._doc, success: true}
       res.send(response);
     })
     .catch((err) => {
