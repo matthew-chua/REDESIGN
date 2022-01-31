@@ -2,6 +2,21 @@ var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 // var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
 const User = require("./userSchema");
 
+const fetchUserHandler = (req, res) => {
+  const document = { userID: req.body.userID };
+
+  User.findOne(document)
+    .then((result) => {
+      const response = {...result._doc, success: true}
+      res.send(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+
+
 // Sign In With User -- User enters mobile number for sms to be sent
 const signInWithPhoneNumberHandler = (req, res) => {
   var phoneNumber = req.body.recipient;
@@ -61,6 +76,21 @@ const createUserHandler = (req, res) => {
     .save()
     .then((result) => {
         const response = {...result._doc, success: true}
+        res.send(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+
+const banUserHandler = (req, res) => {
+  const document = { userID: req.body.userID };
+  const update = { banned: req.body.banned };
+
+  User.findOneAndUpdate(document, update)
+    .then((result) => {
+      const response = {...result._doc, success: true}
       res.send(response);
     })
     .catch((err) => {
@@ -69,8 +99,12 @@ const createUserHandler = (req, res) => {
     });
 };
 
+
+
 module.exports = {
+  fetchUserHandler,
   signInWithPhoneNumberHandler,
   verifyOTPHandler,
   createUserHandler,
+  banUserHandler
 };

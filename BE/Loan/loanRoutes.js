@@ -1,38 +1,18 @@
-const express = require('express')
+const express = require("express");
 
-const Loan = require("../Models/loanSchema");
+const {
+  createLoan,
+  endLoan
+} = require("./loanController");
+const router = express.Router();
 
-const app = express();
+// Routes (They all should just be 1 line)
 
-//create loan document
-app.get('/createLoan', (req, res)=>{
-    const loan = new Loan({
-        userID: "122345",
-        loanID: "testID",
-        borrowDate: "12/12/12",
-        returned: false,
-        banned: false,
-        warning: false
-    });
+// Fetch Trolley
+router.post("/createLoan", createLoan);
 
-    loan.save()
-    .then((result)=>{
-        res.send(result)
-    })
-    .catch((err)=>{
-        console.log(err)
-    });
-})
+// Lock Trolley
+router.put("/endLoan", endLoan);
 
-//ban user
 
-//unban user
-
-//warn user
-
-//unwarn user
-
-//return trolley
-//this should be called by the microcontrollerœ
-
-//get loan
+module.exports = router;
