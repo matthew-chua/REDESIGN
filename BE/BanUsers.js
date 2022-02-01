@@ -26,7 +26,7 @@ const ban = (userID) => {
 
 const BanUsers = async () => {
   
-  console.log("TIMEOUT TEST")
+  // console.log("TIMEOUT TEST")
 
   //get all loans
   const openLoans = await getLoans();
@@ -39,7 +39,7 @@ const BanUsers = async () => {
   
   openLoans.forEach((loan) => {
     if (loan['borrowDate'] < now){
-      console.log("NEED TO BAN", loan);
+      // console.log("NEED TO BAN", loan);
 
       //ban the user
       ban(loan['userID']);

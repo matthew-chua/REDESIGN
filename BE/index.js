@@ -2,13 +2,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require('cors');
 require("dotenv").config();
 
 // App Setup
 const app = express();
-const port = 3000;
+const port = 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+//cors stuff
+app.use(cors({
+  credentials: true
+}));
 
 // DB Config
 const password = process.env.MONGO_PASSWORD;

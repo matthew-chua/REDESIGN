@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/createTrolley", createTrolleyHandler);
 
 // Fetch Trolley
-router.get("/fetchTrolley", fetchTrolleyHandler);
+router.post("/fetchTrolley", fetchTrolleyHandler);
 
 // Lock Trolley
 router.put("/setIsUnlocked", setIsUnlockedHandler);

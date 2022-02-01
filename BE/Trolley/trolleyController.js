@@ -23,8 +23,8 @@ const fetchTrolleyHandler = (req, res) => {
   const trolleyID = req.body.trolleyID;
   Trolley.findOne({ trolleyID: trolleyID })
     .then((result) => {
-      const response = { ...result._doc, success: true };
-      res.send(response);
+      // const response = { ...result, success: true };
+      res.send(result);
     })
     .catch((err) => {
       console.log(err);

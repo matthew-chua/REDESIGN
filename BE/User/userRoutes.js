@@ -13,7 +13,7 @@ const router = express.Router();
 // Routes (They all should just be 1 line)
 
 // Fetch User
-router.get("/fetchUser", fetchUserHandler);
+router.post("/fetchUser", fetchUserHandler);
 
 // Sign in With Phone Number
 router.post("/signInWithPhoneNumber", signInWithPhoneNumberHandler);

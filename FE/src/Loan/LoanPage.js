@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./LoanPage.module.css";
+import axios from "axios";
 
 export default function LoanPage() {
   const [user, setUser] = useState({
@@ -8,19 +9,56 @@ export default function LoanPage() {
 
   //represents state of loan
   //can be "locked", "unlocked" or "returned"
-  const [loanState, setLoanState] = useState("returned");
+  const [loanState, setLoanState] = useState("locked");
+  const [trolleyState, setTrolleyState] = useState({})
+
+  const TID = "1"
+
+  const baseURL = 'https://stormy-stream-68782.herokuapp.com'
+  // const baseURL = 'https://localhost:4000'
 
   const unlockHandler = () => {
     console.log("SEND SIGNAL TO BACKEND TO UNLOCK");
-    //createLoan with the trolleyID and the userID
 
+    axios.post(`${baseURL}/trolley/fetchTrolley`, {
+      body: {
+        trolleyID: TID
+      },
+      // headers: {
+      //   'Content-Type': 'application/json'
+      // }
+    })
+    .then((res) => {
+      setTrolleyState(res)
+      console.log("fetch trolley", res)
+    })
+    .catch((err)=>{
+      console.log("ERR", err);
+    })
+
+    //createLoan with the trolleyID and the userID
+    // axios.post(`${baseURL}/loan/createLoan`, {
+    //   body: {
+    //     userID: "ANOTHERONE",
+    //     loanID: "ANOTHER3",
+    //     trolleyID: "NEW TROLLEY"
+    //   }
+    // })
+    // .then((res) => {
+    //   console.log("createloan", res);
+    //   setLoanState("unlocked");
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // })
     //insert try catch and update the loanState accordingly
-    setLoanState("unlocked");
   };
 
   useEffect(() => {
     //fetch the userobject from localStorage
     //set the userState
+
+    
   }, []);
 
   return (
