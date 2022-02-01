@@ -1,4 +1,5 @@
 const Trolley = require("./trolleySchema");
+const Constants = require("../Common/Constants");
 
 const createTrolleyHandler = (req, res) => {
   const trolley = new Trolley({
@@ -7,15 +8,26 @@ const createTrolleyHandler = (req, res) => {
     isUnlocked: false,
   });
 
-  trolley
-    .save()
+  // Check for duplicates
+  Trolley.findOne({ trolleyID: req.body.trolleyID })
     .then((result) => {
-      const response = { ...result._doc, success: true };
-      res.send(response);
+      if (result) {
+        // Duplicate found, return error
+        res.status(400).send({ error: Constants.duplicateTrolleyID });
+        return;
+      }
+      // No Duplicates
+      trolley
+        .save()
+        .then((result) => {
+          res.status(200).send(result);
+        })
+        .catch((err) => {
+          res.status(400).send({ error: Constants.invalidRequest });
+        });
     })
     .catch((err) => {
-      console.log("err:", err);
-      res.send({ success: false });
+      res.status(400).send({ error: Constants.invalidRequest });
     });
 };
 
@@ -23,12 +35,14 @@ const fetchTrolleyHandler = (req, res) => {
   const trolleyID = req.params.trolleyID;
   Trolley.findOne({ trolleyID: trolleyID })
     .then((result) => {
-      // const response = { ...result, success: true };
-      res.send(result);
+      if (!result) {
+        res.status(400).send({ error: Constants.trolleyNotFound });
+        return;
+      }
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
+      res.status(400).send({ error: Constants.invalidRequest });
     });
 };
 
@@ -37,12 +51,14 @@ const setIsUnlockedHandler = (req, res) => {
   const update = { isUnlocked: req.body.isUnlocked };
   Trolley.findOneAndUpdate(trolleyID, update)
     .then((result) => {
-      const response = { ...result._doc, success: true };
-      res.send(response);
+      if (!result) {
+        res.status(400).send({ error: Constants.trolleyNotFound });
+        return;
+      }
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log("err: ", err);
-      res.send({ success: false });
+      res.status(400).send({ error: Constants.invalidRequest });
     });
 };
 
@@ -51,38 +67,42 @@ const setShouldUnlockHandler = (req, res) => {
   const shouldUnlock = { shouldUnlock: req.body.shouldUnlock };
 
   Trolley.findOneAndUpdate(trolleyID, shouldUnlock)
-  .then((result) => {
-    const response = { ...result._doc, success: true };
-    res.send(response);
-  })
-  .catch((err) => {
-    console.log("err: ", err);
-    res.send({ success: false });
-  });
-}
+    .then((result) => {
+      if (!result) {
+        res.status(400).send({error: Constants.trolleyNotFound});
+        return;
+      }
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(400).send({error: Constants.invalidRequest});
+    });
+};
 
 const returnTrolleyHandler = (req, res) => {
   const trolleyID = { trolleyID: req.body.trolleyID };
-  const returned = { 
+  const returned = {
     isUnlocked: false,
     shouldUnlock: false,
   };
 
   Trolley.findOneAndUpdate(trolleyID, returned)
-  .then((result) => {
-    const response = { ...result._doc, success: true };
-    res.send(response);
-  })
-  .catch((err) => {
-    console.log("err: ", err);
-    res.send({ success: false });
-  });
-}
- 
+    .then((result) => {
+      if (!result) {
+        res.status(400).send({error: Constants.trolleyNotFound});
+        return;
+      }
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(400).send({error: Constants.invalidRequest});
+    });
+};
+
 module.exports = {
   createTrolleyHandler,
   fetchTrolleyHandler,
   setIsUnlockedHandler,
   setShouldUnlockHandler,
-  returnTrolleyHandler
+  returnTrolleyHandler,
 };

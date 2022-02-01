@@ -1,21 +1,19 @@
 var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 // var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
 const User = require("./userSchema");
+const Constants = require('../Common/Constants');
 
 const fetchUserHandler = (req, res) => {
   const userID = { userID: req.params.userID };
 
   User.findOne(userID)
     .then((result) => {
-      const response = {...result._doc, success: true}
-      res.send(response);
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
+      res.status(400).send({error: Constants.invalidRequest});
     });
 };
-
 
 // Sign In With User -- User enters mobile number for sms to be sent
 const signInWithPhoneNumberHandler = (req, res) => {
@@ -31,12 +29,10 @@ const signInWithPhoneNumberHandler = (req, res) => {
 
   messagebird.verify.create(phoneNumber, params, function (err, response) {
     if (err) {
-      res.send({ success: false });
+      res.status(400).send({error: Constants.invalidRequest});
       return console.log(err);
     }
-    console.log(response);
-    response = { ...response, success: true };
-    res.send(response);
+    res.status(200).send(response);
   });
 };
 
@@ -49,22 +45,18 @@ const verifyOTPHandler = (req, res) => {
   messagebird.verify.verify(id, token, function (err, response) {
     if (err) {
       // Verification has failed
-      console.log("failed: ", err);
-      res.send({ success: false });
-    } else {
-      // Verification was successful
-      response = { ...response, success: true };
-      // on success, remember to query db for user id
-
-      res.send(response);
+      res.status(400).send({error: Constants.invalidRequest});
+      return console.log(err);
     }
+    // Verification was successful
+    // on success, remember to query db for user id
+    res.status(200).send(response);
   });
 };
 
 // Create user from phone number and name
 const createUserHandler = (req, res) => {
   const userId = Math.random().toString(16).slice(2);
-  console.log("userId: ", userId);
 
   const user = new User({
     userID: userId,
@@ -75,12 +67,10 @@ const createUserHandler = (req, res) => {
   user
     .save()
     .then((result) => {
-        const response = {...result._doc, success: true}
-        res.send(response);
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
+      res.status(400).send({error: Constants.invalidRequest});
     });
 };
 
@@ -90,21 +80,17 @@ const banUserHandler = (req, res) => {
 
   User.findOneAndUpdate(document, update)
     .then((result) => {
-      const response = {...result._doc, success: true}
-      res.send(response);
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
+      res.status(400).send({error: Constants.invalidRequest});
     });
 };
-
-
 
 module.exports = {
   fetchUserHandler,
   signInWithPhoneNumberHandler,
   verifyOTPHandler,
   createUserHandler,
-  banUserHandler
+  banUserHandler,
 };

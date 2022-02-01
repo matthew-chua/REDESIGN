@@ -1,11 +1,15 @@
+const Constants = require('../Common/Constants');
 const Loan = require("./loanSchema");
 
 const createLoan = (req, res) => {
 
   const date = new Date();
+
+  const loanID = Math.random().toString(24).slice(2);
+
   const loan = new Loan({
     userID: req.body.userID,
-    loanID: req.body.loanID,
+    loanID: loanID,
     trolleyID: req.body.trolleyID,
     borrowDate: date,
     returned: false,
@@ -14,12 +18,10 @@ const createLoan = (req, res) => {
   loan
     .save()
     .then((result) => {
-      const response = { ...result, success: true };
-      res.send(response);
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
+      res.status(400).send({error: Constants.invalidRequest});
     });
 };
 
@@ -29,11 +31,10 @@ const endLoan = (req, res) => {
 
   Loan.findOneAndUpdate(document, update)
     .then((result) => {
-      const response = { ...result._doc, success: true };
-      res.send(response);
+      res.status(200).send(result);
     })
     .catch((err) => {
-      console.log(err);
+      res.status(400).send({error: Constants.invalidRequest});
     });
 };
 

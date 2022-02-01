@@ -16,18 +16,15 @@ const ban = (userID) => {
 
   User.findOneAndUpdate(query, update)
   .then((res)=>{
-    console.log(res);
-    console.log("SUCCESS");
+    console.log("banned: ", res);
   })
   .catch((err)=>{
-    console.log("ERROR", err);
+    console.log("ban error:", err);
   })
 }
 
 const BanUsers = async () => {
   
-  // console.log("TIMEOUT TEST")
-
   //get all loans
   const openLoans = await getLoans();
   
