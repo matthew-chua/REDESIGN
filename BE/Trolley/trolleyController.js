@@ -20,7 +20,7 @@ const createTrolleyHandler = (req, res) => {
 };
 
 const fetchTrolleyHandler = (req, res) => {
-  const trolleyID = req.body.trolleyID;
+  const trolleyID = req.params.trolleyID;
   Trolley.findOne({ trolleyID: trolleyID })
     .then((result) => {
       // const response = { ...result, success: true };

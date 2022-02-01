@@ -8,10 +8,10 @@ const router = express.Router();
 
 // Routes (They all should just be 1 line)
 
-// Fetch Trolley
+// Create Loan
 router.post("/createLoan", createLoan);
 
-// Lock Trolley
+// End Loan
 router.put("/endLoan", endLoan);
 
 

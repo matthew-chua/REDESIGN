@@ -3,9 +3,9 @@ var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 const User = require("./userSchema");
 
 const fetchUserHandler = (req, res) => {
-  const document = { userID: req.body.userID };
+  const userID = { userID: req.params.userID };
 
-  User.findOne(document)
+  User.findOne(userID)
     .then((result) => {
       const response = {...result._doc, success: true}
       res.send(response);
