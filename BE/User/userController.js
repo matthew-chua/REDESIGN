@@ -15,6 +15,7 @@ const fetchUserHandler = (req, res) => {
     });
 };
 
+
 // Sign In With User -- User enters mobile number for sms to be sent
 const signInWithPhoneNumberHandler = (req, res) => {
   var phoneNumber = req.body.recipient;
@@ -56,22 +57,36 @@ const verifyOTPHandler = (req, res) => {
 
 // Create user from phone number and name
 const createUserHandler = (req, res) => {
-  const userId = Math.random().toString(16).slice(2);
-
-  const user = new User({
-    userID: userId,
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    banned: false,
-  });
-  user
-    .save()
-    .then((result) => {
-      res.status(200).send(result);
-    })
-    .catch((err) => {
-      res.status(400).send({error: Constants.invalidRequest});
+  
+  User.findOne({ phoneNumber: req.body.phoneNumber })
+  .then((result) => {
+    if (result) {
+      //duplicate found
+      res.status(400).send({ error: Constants.duplicatePhoneNumber});
+      return;
+    }
+    const userId = Math.random().toString(16).slice(2);
+    const user = new User({
+      userID: userId,
+      name: req.body.name,
+      phoneNumber: req.body.phoneNumber,
+      banned: false,
     });
+    user
+      .save()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(400).send({error: Constants.invalidRequest});
+      });
+  })
+  .catch((err) => {
+    res.status(400).send({ error: Constants.invalidRequest });
+  });
+  
+
+  
 };
 
 const banUserHandler = (req, res) => {

@@ -38,7 +38,20 @@ const endLoan = (req, res) => {
     });
 };
 
+const getLoan = (req, res) => {
+  const loanID = { loanID: req.params.loanID };
+
+  Loan.findOne(loanID)
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.status(400).send({error: Constants.invalidRequest});
+    });
+};
+
 module.exports = {
   createLoan,
   endLoan,
+  getLoan
 };

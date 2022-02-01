@@ -1,65 +1,52 @@
 import React, { useEffect, useState } from "react";
 import classes from "./LoanPage.module.css";
-import axios from "axios";
+
+import APIHook from "../APIHook";
 
 export default function LoanPage() {
   const [user, setUser] = useState({
-    name: "ivan teo",
+    name: localStorage.getItem('userName'),
+    userID: localStorage.getItem('userID')
   });
 
   //represents state of loan
   //can be "locked", "unlocked" or "returned"
   const [loanState, setLoanState] = useState("locked");
-  const [trolleyState, setTrolleyState] = useState({})
+  const [loanObjectState, setLoanObjectState] = useState({})
+  const [snake, setSnake] = useState(false);
 
   const TID = "1"
 
-  const baseURL = 'https://stormy-stream-68782.herokuapp.com'
-  // const baseURL = 'https://localhost:4000'
 
-  const unlockHandler = () => {
-    console.log("SEND SIGNAL TO BACKEND TO UNLOCK");
+  const unlockHandler = async () => {
 
-    axios.post(`${baseURL}/trolley/fetchTrolley`, {
-      body: {
+    //make sure trolley is not borrowed
+    const trolley = await APIHook("GET", `trolley/${TID}`, {})
+    if (trolley.data.shouldUnlock === true || trolley.data.isUnlocked === true){
+      setLoanState("error");
+      return;
+    }
+    
+    // create loan
+    const loan = await APIHook("POST", "loan/createLoan", {
+        userID: user.userID,
         trolleyID: TID
-      },
-      // headers: {
-      //   'Content-Type': 'application/json'
-      // }
-    })
-    .then((res) => {
-      setTrolleyState(res)
-      console.log("fetch trolley", res)
-    })
-    .catch((err)=>{
-      console.log("ERR", err);
-    })
+    });
 
-    //createLoan with the trolleyID and the userID
-    // axios.post(`${baseURL}/loan/createLoan`, {
-    //   body: {
-    //     userID: "ANOTHERONE",
-    //     loanID: "ANOTHER3",
-    //     trolleyID: "NEW TROLLEY"
-    //   }
-    // })
-    // .then((res) => {
-    //   console.log("createloan", res);
-    //   setLoanState("unlocked");
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // })
-    //insert try catch and update the loanState accordingly
+    setLoanObjectState(loan.data);
+    setLoanState("unlocked");
+    
   };
 
-  useEffect(() => {
-    //fetch the userobject from localStorage
-    //set the userState
+  const returnCheckHandler = async () => {
 
-    
-  }, []);
+    const currentLoan = await APIHook("GET", `loan/${loanObjectState.loanID}`)
+    if (currentLoan.data.returned){
+      setLoanState("returned");
+    }else{
+      setSnake(true);
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -79,13 +66,15 @@ export default function LoanPage() {
 
         {loanState === "unlocked" && (
           <div className={classes.innerContent}>
-          <p className={classes.icon}>
+          <p className={classes.icon} onClick={returnCheckHandler}>
             <i class="fa fa-unlock"></i>
           </p>
-          <h1>08:54</h1>
-          <h1>17 Jan 2021</h1>
+          <h1>{loanObjectState.borrowDate.substring(0,10)}</h1>
+          <h1>{loanObjectState.borrowDate.substring(11,16)}</h1>
           <h3>Ready for use!</h3>
-          <p>Please return your trolley within 24 hours</p>
+          <p>Please return your trolley within 24 hours.</p>
+          <p>Tap the lock above once you've returned your trolley!</p>
+          {snake && <p>CB U NEVER RETURN YET DONT LIE</p>}
           </div>
         )}
 
@@ -94,7 +83,8 @@ export default function LoanPage() {
             <p className={classes.iconError}>
               <i class="fa fa-lock"></i>
             </p>
-            <p>Error, trolley is already unlocked</p>
+            <p>Error, trolley is already unlocked.</p>
+            <p>Please try another trolley.</p>
           </div>
         )}
 

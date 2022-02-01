@@ -2,7 +2,8 @@ const express = require("express");
 
 const {
   createLoan,
-  endLoan
+  endLoan,
+  getLoan
 } = require("./loanController");
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.post("/createLoan", createLoan);
 
 // End Loan
 router.put("/endLoan", endLoan);
+
+// Fetch Loan
+router.get("/:loanID", getLoan);
 
 
 module.exports = router;

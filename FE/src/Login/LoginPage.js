@@ -6,17 +6,19 @@ import Checkbox from "../Common/Checkbox";
 import TextField from "../Common/TextField";
 import classes from "./LoginPage.module.css";
 
+import APIHook from "../APIHook";
+
 export default function LoginPage() {
   const [pageState, setPageState] = useState(1);
   const navigate = useNavigate();
   const [OTP, setOTP] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [OTPError, setOTPError] = useState(false);
+  const [OTPRes, setOTPRes] = useState()
 
   const [userState, setUserState] = useState({
     name: "",
     phoneNumber: "",
-    banned: false,
   });
 
   const inputNumberHandler = (e) => {
@@ -38,18 +40,36 @@ export default function LoginPage() {
     setOTP(e.target.value);
   };
 
-  const verifyOTP = () => {
+  const verifyOTP = async () => {
     //send api call to messagebird to verify OTP
-  };
+    const res = await APIHook("POST", "user/verifyOTP", {
+      id: OTPRes.id,
+      token: OTP
+    })
 
-  const page1NextHandler = () => {
+    //if res.data.verified == true ...
+    //else ...
+
+    
+  };
+  
+  const sendOTP = async () => {
+    const res = await APIHook("POST", "user/signInWithPhoneNumber", {
+      recipient: userState.phoneNumber
+    })
+    // console.log("OTP RES", res);
+    setOTPRes(res.data);
+  }
+
+  const page1NextHandler = async () => {
+    await sendOTP();
     setPageState(2);
     setDisabled(true);
   };
 
-  const page2NextHandler = () => {
+  const page2NextHandler = async () => {
     setOTPError(false)
-    verifyOTP();
+    await verifyOTP();
 
     //redirect if verification is successful
     setPageState(3);
@@ -59,12 +79,20 @@ export default function LoginPage() {
     setOTPError(true)
   };
 
-  const createUserHandler = () => {
+  const createUserHandler = async () => {
+    
+    //check if user in DB (use phone no), if not create
+    
     //send api to create user with userState
-    console.log(userState);
+    const userObject = await APIHook("POST", "user/createUser", {
+      phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
+      name: userState.name
+    });
+    
 
     //use returned object to store userobject in localstorage
-
+    localStorage.setItem('userID', userObject.data.userID);
+    localStorage.setItem('userName', userObject.data.name);
     //redirect to the loan page once done
     const path = "/loan";
     navigate(path);
