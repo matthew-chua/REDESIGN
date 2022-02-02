@@ -7,7 +7,7 @@ const port = 3000;
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 // var messagebird = require('messagebird')(process.env.MESSAGEBIRD_TESTAPIKEY)
-var messagebird = require('messagebird')('INPUT_KEY_HERE')
+var messagebird = require('messagebird')('INPUT_API_KEY')
 // vid has this for messagebird
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
