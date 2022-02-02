@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import Button from "../Common/Button";
 import Checkbox from "../Common/Checkbox";
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [OTP, setOTP] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const [OTPError, setOTPError] = useState(false);
+  // const [OTPError, setOTPError] = useState(false);
   // const [OTPRes, setOTPRes] = useState();
 
   const [userState, setUserState] = useState({
@@ -56,19 +56,14 @@ export default function LoginPage() {
   const createUserBody = {
     name: userState.name,
     phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
-  }
+  };
   const [
     createUserData,
     createUserLoading,
     createUserError,
     setCreateUserError,
     performCreateUser,
-  ] = useFetch(
-    FetchMethod.post,
-    Routes.user.createUser,
-    createUserBody,
-    false
-  );
+  ] = useFetch(FetchMethod.post, Routes.user.createUser, createUserBody, false);
 
   const inputNumberHandler = (e) => {
     //forgot how to do it the proper way
@@ -91,22 +86,18 @@ export default function LoginPage() {
 
   const page1NextHandler = async () => {
     await performSignIn();
-    if (!signInError) {
-      setPageState(2);
-      setDisabled(true);
-    }
   };
 
   const page2NextHandler = async () => {
-    setOTPError(false);
+    // setOTPError(false);
     await performVerifyOTP();
 
     //redirect if verification is successful
     setPageState(3);
-    setDisabled(true);
+    // setDisabled(true);
 
     //else set error state
-    setOTPError(true);
+    // setOTPError(true);
   };
 
   const createUserHandler = async () => {
@@ -114,17 +105,6 @@ export default function LoginPage() {
 
     //send api to create user with userState
     await performCreateUser();
-    if (createUserError){
-      // display error
-      return
-    }
-
-    //use returned object to store userobject in localstorage
-    localStorage.setItem("userID", createUserData.userID);
-    localStorage.setItem("userName", createUserData.name);
-    //redirect to the loan page once done
-    const path = Routes.loan.fetch;
-    navigate(path);
   };
 
   // ==== Helpers ====
@@ -142,18 +122,49 @@ export default function LoginPage() {
 
   // Verify TextFields
   useEffect(() => {
-    if (pageState === 1) {
+    if (isPageOne()) {
       setDisabled(!phoneNumberIsValid());
-    } else if (pageState === 2) {
+    } else if (isPageTwo()) {
       setDisabled(!otpIsValid());
     } else {
       setDisabled(!nameIsValid());
     }
-  }, [userState, OTP, pageState]);
+  }, [userState, OTP, signInData, verifyOTPData, createUserData]);
+
+  useEffect(() => {
+    if (createUserData) {
+      //use returned object to store userobject in localstorage
+      localStorage.setItem("userID", createUserData.userID);
+      localStorage.setItem("userName", createUserData.name);
+      //redirect to the loan page once done
+      const path = Routes.loan.fetch;
+      navigate(path);
+    }
+  }, [createUserData]);
+
+  const isPageOne = () => {
+    return signInData === null;
+  };
+
+  const isPageTwo = () => {
+    // Don't remove the comment below -- actual logic when no longer testing
+    // return signInData && verifyOTPData === null;
+
+    // Remove this when no longer testing
+    return signInData !== null && pageState !== 3;
+  };
+
+  const isPageThree = () => {
+    // Don't remove the comment below -- actual logic when no longer testing
+    // return verifyOTPData && createUserData === null;
+
+    // Remove this when no longer testing
+    return pageState === 3;
+  };
 
   return (
     <div className={classes.root}>
-      {pageState === 1 && (
+      {isPageOne() && (
         <div className={classes.page1root}>
           <h1> Enter your mobile number</h1>
           <h3>We will send you a confirmation code</h3>
@@ -176,7 +187,7 @@ export default function LoginPage() {
         </div>
       )}
 
-      {pageState === 2 && (
+      {isPageTwo() && (
         <div className={classes.page2root}>
           <h1>Enter code sent to your number</h1>
           <h3>
@@ -187,8 +198,8 @@ export default function LoginPage() {
             onChange={OTPHandler}
             value={OTP}
             placeholder="Your code here"
-            error={OTPError}
-            setError={setOTPError}
+            error={verifyOTPError}
+            setError={setVerifyOTPError}
             errorText="Wrong code entered! Please try again."
           ></TextField>
           <Button onClickHandler={page2NextHandler} isDisabled={disabled}>
@@ -200,11 +211,17 @@ export default function LoginPage() {
         </div>
       )}
 
-      {pageState === 3 && (
+      {isPageThree() && (
         <div className={classes.page3root}>
           <h1>Create Account</h1>
           <h3>Enter your full name</h3>
-          <TextField onChange={nameHandler} placeholder="eg. John Doe" />
+          <TextField
+            onChange={nameHandler}
+            placeholder="eg. John Doe"
+            error={createUserError}
+            setError={setCreateUserError}
+            errorText="Error: could not create account"
+          />
           <Button onClickHandler={createUserHandler} isDisabled={disabled}>
             Done
           </Button>

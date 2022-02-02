@@ -22,6 +22,7 @@ const useFetch = (method, route, body, callOnLoad = true) => {
       setData(res.data);
       setLoading(false);
     } catch (err) {
+      console.log("error: ", err.response.data)
       setError(err.response.data);
       setLoading(false);
     }
