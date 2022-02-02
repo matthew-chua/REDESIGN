@@ -1,7 +1,7 @@
 var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
 // var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
 const User = require("./userSchema");
-const Constants = require('../Common/Constants');
+const Constants = require("../Common/Constants");
 
 const fetchUserHandler = (req, res) => {
   const userID = { userID: req.params.userID };
@@ -11,10 +11,9 @@ const fetchUserHandler = (req, res) => {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.status(400).send({error: Constants.invalidRequest});
+      res.status(400).send({ error: Constants.invalidRequest });
     });
 };
-
 
 // Sign In With User -- User enters mobile number for sms to be sent
 const signInWithPhoneNumberHandler = (req, res) => {
@@ -30,7 +29,7 @@ const signInWithPhoneNumberHandler = (req, res) => {
 
   messagebird.verify.create(phoneNumber, params, function (err, response) {
     if (err) {
-      res.status(400).send({error: Constants.invalidRequest});
+      res.status(400).send({ error: Constants.invalidRequest });
       return console.log(err);
     }
     res.status(200).send(response);
@@ -46,7 +45,7 @@ const verifyOTPHandler = (req, res) => {
   messagebird.verify.verify(id, token, function (err, response) {
     if (err) {
       // Verification has failed
-      res.status(400).send({error: Constants.invalidRequest});
+      res.status(400).send({ error: Constants.invalidRequest });
       return console.log(err);
     }
     // Verification was successful
@@ -57,36 +56,32 @@ const verifyOTPHandler = (req, res) => {
 
 // Create user from phone number and name
 const createUserHandler = (req, res) => {
-  
   User.findOne({ phoneNumber: req.body.phoneNumber })
-  .then((result) => {
-    if (result) {
-      //duplicate found
-      res.status(400).send({ error: Constants.duplicatePhoneNumber});
-      return;
-    }
-    const userId = Math.random().toString(16).slice(2);
-    const user = new User({
-      userID: userId,
-      name: req.body.name,
-      phoneNumber: req.body.phoneNumber,
-      banned: false,
-    });
-    user
-      .save()
-      .then((result) => {
-        res.status(200).send(result);
-      })
-      .catch((err) => {
-        res.status(400).send({error: Constants.invalidRequest});
+    .then((result) => {
+      if (result) {
+        //duplicate found
+        res.status(400).send({ error: Constants.duplicatePhoneNumber });
+        return;
+      }
+      const userId = Math.random().toString(16).slice(2);
+      const user = new User({
+        userID: userId,
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        banned: false,
       });
-  })
-  .catch((err) => {
-    res.status(400).send({ error: Constants.invalidRequest });
-  });
-  
-
-  
+      user
+        .save()
+        .then((result) => {
+          res.status(200).send(result);
+        })
+        .catch((err) => {
+          res.status(400).send({ error: Constants.invalidRequest });
+        });
+    })
+    .catch((err) => {
+      res.status(400).send({ error: Constants.invalidRequest });
+    });
 };
 
 const banUserHandler = (req, res) => {
@@ -98,7 +93,7 @@ const banUserHandler = (req, res) => {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.status(400).send({error: Constants.invalidRequest});
+      res.status(400).send({ error: Constants.invalidRequest });
     });
 };
 

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import APIHook from "../APIHook";
 
+// Components
 import Button from "../Common/Button";
+
+// Network Imports
+import useFetch from "../Network/useFetch";
+import Routes from "../Network/Routes";
+import FetchMethod from "../Network/FetchMethod";
 
 export default function LandingPage() {
   const userObject = {
@@ -12,14 +17,17 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [banned, setBanned] = useState(false);
 
+  const { fetchUserData, fetchUserLoading, fetchUserError, setFetchUserError, performFetchUser } =
+    useFetch(FetchMethod.get, Routes.user.fetch+userObject.userID);
+
   const checkBanned = async () => {
-    const DBUser = await APIHook("GET", `user/${userObject.userID}`, {
-      userID: userObject.userID,
-    });
-    if (DBUser.data.banned) {
+    // const DBUser = await useFetch("GET", `user/${userObject.userID}`, {
+    //   userID: userObject.userID,
+    // });
+    await performFetchUser();
+    if (fetchUserData.banned) {
       setBanned(true);
     } else {
-
       //redirect to the loan page
       const path = "/loan";
       // navigate(path);

@@ -6,7 +6,10 @@ import Checkbox from "../Common/Checkbox";
 import TextField from "../Common/TextField";
 import classes from "./LoginPage.module.css";
 
-import APIHook from "../APIHook";
+// Network Imports
+import useFetch from "../Network/useFetch";
+import Routes from "../Network/Routes";
+import FetchMethod from "../Network/FetchMethod";
 
 export default function LoginPage() {
   const [pageState, setPageState] = useState(1);
@@ -14,12 +17,60 @@ export default function LoginPage() {
   const [OTP, setOTP] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [OTPError, setOTPError] = useState(false);
-  const [OTPRes, setOTPRes] = useState()
+  // const [OTPRes, setOTPRes] = useState();
 
   const [userState, setUserState] = useState({
     name: "",
     phoneNumber: "",
   });
+
+  // Sign In With Phone Number
+  const signInBody = { recipient: userState.phoneNumber };
+  // console.log("method: ", FetchMethod.post)
+  // console.log("route: ", Routes.user.signInWithPhoneNumber)
+  // console.log("body: ", signInBody)
+  const [
+    signInData,
+    signInLoading,
+    signInError,
+    setSignInError,
+    performSignIn,
+  ] = useFetch(
+    FetchMethod.post,
+    Routes.user.signInWithPhoneNumber,
+    signInBody,
+    false
+  );
+
+  // Verify OTP
+  const verifyOTPBody = {
+    id: signInData ? signInData.id : null,
+    token: OTP,
+  };
+  const [
+    verifyOTPData,
+    verifyOTPLoading,
+    verifyOTPError,
+    setVerifyOTPError,
+    performVerifyOTP,
+  ] = useFetch(FetchMethod.post, Routes.user.verifyOTP, verifyOTPBody, false);
+
+  const createUserBody = {
+    name: userState.name,
+    phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
+  }
+  const [
+    createUserData,
+    createUserLoading,
+    createUserError,
+    setCreateUserError,
+    performCreateUser,
+  ] = useFetch(
+    FetchMethod.post,
+    Routes.user.createUser,
+    createUserBody,
+    false
+  );
 
   const inputNumberHandler = (e) => {
     //forgot how to do it the proper way
@@ -42,33 +93,40 @@ export default function LoginPage() {
 
   const verifyOTP = async () => {
     //send api call to messagebird to verify OTP
-    const res = await APIHook("POST", "user/verifyOTP", {
-      id: OTPRes.id,
-      token: OTP
-    })
+    // const res = await useFetch("POST", Routes.user.verifyOTP, {
+    //   id: OTPRes.id,
+    //   token: OTP,
+    // });
+    await performVerifyOTP();
 
-    //if res.data.verified == true ...
+    //if verifyOTPData.verified == true ...
     //else ...
-
-    
   };
-  
+
   const sendOTP = async () => {
-    const res = await APIHook("POST", "user/signInWithPhoneNumber", {
-      recipient: userState.phoneNumber
-    })
+    // const res = await useFetch("POST", Routes.user.signInWithPhoneNumber, {
+    //   recipient: userState.phoneNumber,
+    // });
+    await performSignIn();
+    if (signInError) {
+      // show error
+      console.log("error");
+    }
+
     // console.log("OTP RES", res);
-    setOTPRes(res.data);
-  }
+    // setOTPRes(res.data);
+  };
 
   const page1NextHandler = async () => {
-    await sendOTP();
-    setPageState(2);
-    setDisabled(true);
+    await performSignIn();
+    if (!signInError) {
+      setPageState(2);
+      setDisabled(true);
+    }
   };
 
   const page2NextHandler = async () => {
-    setOTPError(false)
+    setOTPError(false);
     await verifyOTP();
 
     //redirect if verification is successful
@@ -76,47 +134,55 @@ export default function LoginPage() {
     setDisabled(true);
 
     //else set error state
-    setOTPError(true)
+    setOTPError(true);
   };
 
   const createUserHandler = async () => {
-    
     //check if user in DB (use phone no), if not create
-    
+
     //send api to create user with userState
-    const userObject = await APIHook("POST", "user/createUser", {
-      phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
-      name: userState.name
-    });
-    
+    // const userObject = await useFetch("POST", "user/createUser", {
+    //   phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
+    //   name: userState.name,
+    // });
+    console.log("body: ", createUserBody)
+    await performCreateUser();
+    if (createUserError){
+      // display error
+      console.log("error: ", createUserError)
+      return
+    }
+    console.log("userdata: ", createUserData)
 
     //use returned object to store userobject in localstorage
-    localStorage.setItem('userID', userObject.data.userID);
-    localStorage.setItem('userName', userObject.data.name);
+    localStorage.setItem("userID", createUserData.userID);
+    localStorage.setItem("userName", createUserData.name);
     //redirect to the loan page once done
-    const path = "/loan";
+    const path = Routes.loan.fetch;
     navigate(path);
   };
 
+  // ==== Helpers ====
+  const phoneNumberIsValid = () => {
+    return userState.phoneNumber.replace(/\s/g, "").length === 11;
+  };
+
+  const otpIsValid = () => {
+    return OTP.replace(/\s/g, "").length === 6;
+  };
+
+  const nameIsValid = () => {
+    return userState.name.replace(/\s/g, "").length > 0;
+  };
+
+  // Verify TextFields
   useEffect(() => {
     if (pageState === 1) {
-      if (userState.phoneNumber.replace(/\s/g, "").length === 11) {
-        setDisabled(false);
-      } else {
-        setDisabled(true);
-      }
+      setDisabled(!phoneNumberIsValid());
     } else if (pageState === 2) {
-      if (OTP.replace(/\s/g, "").length === 6) {
-        setDisabled(false);
-      } else {
-        setDisabled(true);
-      }
+      setDisabled(!otpIsValid());
     } else {
-      if (userState.name.replace(/\s/g, "").length > 0) {
-        setDisabled(false);
-      } else {
-        setDisabled(true);
-      }
+      setDisabled(!nameIsValid());
     }
   }, [userState, OTP, pageState]);
 
@@ -130,6 +196,9 @@ export default function LoginPage() {
             onChange={inputNumberHandler}
             value={userState.phoneNumber}
             placeholder="+65 8123 4567"
+            error={signInError}
+            setError={setSignInError}
+            errorText="Invalid phone number entered, please try again!"
           />
           <Checkbox text={"Stay signed in"} initialState={true} />
           <Button onClickHandler={page1NextHandler} isDisabled={disabled}>
@@ -170,10 +239,7 @@ export default function LoginPage() {
         <div className={classes.page3root}>
           <h1>Create Account</h1>
           <h3>Enter your full name</h3>
-          <TextField
-            onChange={nameHandler}
-            placeholder="eg. John Doe"
-          />
+          <TextField onChange={nameHandler} placeholder="eg. John Doe" />
           <Button onClickHandler={createUserHandler} isDisabled={disabled}>
             Done
           </Button>

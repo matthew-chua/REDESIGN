@@ -4,7 +4,9 @@ import classes from "./TextField.module.css";
 export default function TextField(props) {
   const onChange = (event) => {
     props.onChange(event);
-    props.setError(false);
+    if (props.setError){
+      props.setError(null);
+    }
   };
 
   return (
