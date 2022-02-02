@@ -26,9 +26,7 @@ export default function LoginPage() {
 
   // Sign In With Phone Number
   const signInBody = { recipient: userState.phoneNumber };
-  // console.log("method: ", FetchMethod.post)
-  // console.log("route: ", Routes.user.signInWithPhoneNumber)
-  // console.log("body: ", signInBody)
+
   const [
     signInData,
     signInLoading,
@@ -91,32 +89,6 @@ export default function LoginPage() {
     setOTP(e.target.value);
   };
 
-  const verifyOTP = async () => {
-    //send api call to messagebird to verify OTP
-    // const res = await useFetch("POST", Routes.user.verifyOTP, {
-    //   id: OTPRes.id,
-    //   token: OTP,
-    // });
-    await performVerifyOTP();
-
-    //if verifyOTPData.verified == true ...
-    //else ...
-  };
-
-  const sendOTP = async () => {
-    // const res = await useFetch("POST", Routes.user.signInWithPhoneNumber, {
-    //   recipient: userState.phoneNumber,
-    // });
-    await performSignIn();
-    if (signInError) {
-      // show error
-      console.log("error");
-    }
-
-    // console.log("OTP RES", res);
-    // setOTPRes(res.data);
-  };
-
   const page1NextHandler = async () => {
     await performSignIn();
     if (!signInError) {
@@ -127,7 +99,7 @@ export default function LoginPage() {
 
   const page2NextHandler = async () => {
     setOTPError(false);
-    await verifyOTP();
+    await performVerifyOTP();
 
     //redirect if verification is successful
     setPageState(3);
@@ -141,18 +113,11 @@ export default function LoginPage() {
     //check if user in DB (use phone no), if not create
 
     //send api to create user with userState
-    // const userObject = await useFetch("POST", "user/createUser", {
-    //   phoneNumber: userState.phoneNumber.replace(/\s/g, "").substring(0),
-    //   name: userState.name,
-    // });
-    console.log("body: ", createUserBody)
     await performCreateUser();
     if (createUserError){
       // display error
-      console.log("error: ", createUserError)
       return
     }
-    console.log("userdata: ", createUserData)
 
     //use returned object to store userobject in localstorage
     localStorage.setItem("userID", createUserData.userID);
