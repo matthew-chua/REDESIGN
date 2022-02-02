@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+.page1root {
+  display: flex;
+  flex-direction: column;
+}
+.page2root {
+  display: flex;
+  flex-direction: column;
+}
+.page3root {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottomText {
+  text-align: center;
+}
+

@@ -1,0 +1,11 @@
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 5px;
+  cursor: pointer;
+}
+.text {
+  cursor: pointer;
+}
