@@ -8,14 +8,14 @@ import React from 'react'
 import classes from "./LoadingModal.module.css"
 
 export default function LoadingModal(props) {
+// to test loading page only: 
+// export default function LoadingModal() { 
     return (
         <>
         {props.isLoading && 
         <>
-        <div className={classes.pic}>
-            <h1 className={classes.text}> </h1>
-        </div>
-            <div className={classes.overlay}> </div>
+        <h3 className={classes.text}> </h3>
+        <div className={classes.overlay}> </div>
         </>
         }
         </>
