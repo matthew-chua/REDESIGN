@@ -9,6 +9,7 @@ import LoginPage from "./Login/LoginPage";
 import LoanPage from "./Loan/LoanPage";
 import LandingPage from "./Landing/LandingPage";
 // import LoadingModal from "./Loading/LoadingModal";
+import ErrorPage from "./Error/ErrorPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path="/home" element={<LandingPage/>} />
         <Route exact path="login" element={<LoginPage/>} />
         <Route exact path="loan" element={<LoanPage/>} />
+        <Route exact path="error" element={<ErrorPage/>} />
         {/* <Route exact path="load" element={<LoadingModal/>} /> */}
         <Route path="/" element={<Navigate to='/home'/>}/>
         
