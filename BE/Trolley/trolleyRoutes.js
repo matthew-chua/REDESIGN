@@ -5,7 +5,8 @@ const {
   fetchTrolleyHandler,
   setIsUnlockedHandler,
   setShouldUnlockHandler,
-  returnTrolleyHandler
+  returnTrolleyHandler,
+  fetchTrolleyStreamHandler,
 } = require("./trolleyController");
 const router = express.Router();
 
@@ -24,7 +25,9 @@ router.put("/setIsUnlocked", setIsUnlockedHandler);
 router.put("/setShouldUnlock", setShouldUnlockHandler);
 
 // Return Trolley
-router.put('/returnTrolley', returnTrolleyHandler)
+router.put("/returnTrolley", returnTrolleyHandler);
 
+// Test Fetch
+router.get("/connect/:trolleyID", fetchTrolleyStreamHandler);
 
 module.exports = router;
