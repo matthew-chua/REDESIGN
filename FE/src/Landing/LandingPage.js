@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import LoadingModal from "../Loading/LoadingModal";
+
 // Components
 import Button from "../Common/Button";
 
@@ -43,6 +45,14 @@ export default function LandingPage() {
     }
   }, []);
 
+  const isLoading = () => {
+    if (fetchUserLoading) {
+      return true; 
+    } else {
+      return false;
+    }
+  }
+
   const loginPageHandler = () => {
     const path = "/login";
     navigate(path);
@@ -50,6 +60,8 @@ export default function LandingPage() {
 
   return (
     <div>
+      <LoadingModal isLoading={isLoading()}/>
+
       {!banned && (
         <div>
           <h1>Sup bro</h1>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import classes from "./LoanPage.module.css";
 
+import LoadingModal from "../Loading/LoadingModal";
+
 // Network Imports
 import useFetch from "../Network/useFetch";
 import Routes from "../Network/Routes";
@@ -51,8 +53,16 @@ export default function LoanPage() {
     fetchLoanError,
     setFetchLoanError,
     performFetchLoan,
-   ] = useFetch(FetchMethod.get, Routes.loan.fetch, null, false);
+  ] = useFetch(FetchMethod.get, Routes.loan.fetch, null, false);
 
+  const isLoading = () => {
+    if (createLoanLoading || fetchTrolleyLoading || fetchLoanLoading) {
+      return true; 
+    } else {
+      return false;
+    }
+  }
+  
   const trolleyIsBorrowed = () => {
     return (
       fetchTrolleyData.shouldUnlock === true ||
@@ -99,6 +109,7 @@ export default function LoanPage() {
 
   return (
     <div className={classes.root}>
+      <LoadingModal isLoading={isLoading()}/>
       {loanState !== "returned" && <h1>Welcome, {user.name}!</h1>}
       {loanState === "returned" && <h1>Thank you, {user.name}!</h1>}
 

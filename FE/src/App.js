@@ -21,8 +21,7 @@ function App() {
         <Route exact path="loan" element={<LoanPage/>} />
         <Route exact path="error" element={<ErrorPage/>} />
         {/* <Route exact path="load" element={<LoadingModal/>} /> */}
-        <Route path="/" element={<Navigate to='/home'/>}/>
-        
+        <Route path="/*" element={<Navigate to='/home'/>}/>        
         
       </Routes>
     </Router>

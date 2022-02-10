@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+import LoadingModal from "../Loading/LoadingModal";
+
 import Button from "../Common/Button";
 import Checkbox from "../Common/Checkbox";
 import TextField from "../Common/TextField";
@@ -64,6 +66,14 @@ export default function LoginPage() {
     setCreateUserError,
     performCreateUser,
   ] = useFetch(FetchMethod.post, Routes.user.createUser, createUserBody, false);
+
+  const isLoading = () => {
+    if (signInLoading || verifyOTPLoading || createUserLoading) {
+      return true; 
+    } else {
+      return false;
+    }
+  }
 
   const inputNumberHandler = (e) => {
     //forgot how to do it the proper way
@@ -164,6 +174,7 @@ export default function LoginPage() {
 
   return (
     <div className={classes.root}>
+      <LoadingModal isLoading={isLoading()}/>
       {isPageOne() && (
         <div className={classes.page1root}>
           <h1> Enter your mobile number</h1>
