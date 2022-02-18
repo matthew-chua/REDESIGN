@@ -147,6 +147,7 @@ const returnTrolleyHandler = (req, res) => {
     isUnlocked: false,
     shouldUnlock: false,
   };
+  const options = { new: true };
 
   Trolley.findOneAndUpdate(trolleyID, returned, options)
     .then((result) => {
