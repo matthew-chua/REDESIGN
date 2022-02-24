@@ -1,5 +1,5 @@
-var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
-// var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
+// var messagebird = require("messagebird")(process.env.MESSAGEBIRD_TESTAPIKEY);
+var messagebird = require("messagebird")(process.env.MESSAGEBIRD_LIVEAPIKEY);
 const User = require("./userSchema");
 const Constants = require("../Common/Constants");
 

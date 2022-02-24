@@ -26,7 +26,7 @@ const createLoan = (req, res) => {
 };
 
 const endLoan = (req, res) => {
-  const document = { loanID: req.body.loanID };
+  const document = { trolleyID: req.body.loanID };
   const update = { returned: true };
 
   Loan.findOneAndUpdate(document, update)
@@ -39,9 +39,9 @@ const endLoan = (req, res) => {
 };
 
 const getLoan = (req, res) => {
-  const loanID = { loanID: req.params.loanID };
+  const trolleyID = { trolleyID: req.params.loanID };
 
-  Loan.findOne(loanID)
+  Loan.findOne(trolleyID)
     .then((result) => {
       res.status(200).send(result);
     })

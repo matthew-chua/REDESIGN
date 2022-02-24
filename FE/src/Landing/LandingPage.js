@@ -21,8 +21,8 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [banned, setBanned] = useState(false);
 
-  const { fetchUserData, fetchUserLoading, fetchUserError, setFetchUserError, performFetchUser } =
-    useFetch(FetchMethod.get, Routes.user.fetch+userObject.userID);
+  const [ fetchUserData, fetchUserLoading, fetchUserError, setFetchUserError, performFetchUser ] =
+    useFetch(FetchMethod.get, Routes.user.user+userObject.userID);
 
   // useParams save trolleyID into a variable 
   const params = useParams();
@@ -32,14 +32,28 @@ export default function LandingPage() {
     //   userID: userObject.userID,
     // });
     await performFetchUser();
-    if (fetchUserData.banned) {
-      setBanned(true);
-    } else {
-      //redirect to the loan page
-      const path = `/loan/${params.id}`;
-      // navigate(path);
-    }
+    // if (fetchUserData.banned) {
+    //   setBanned(true);
+    //   console.log("setting ban true")
+    // } else {
+    //   //redirect to the loan page
+    //   const path = `/loan/${params.id}`;
+    //   navigate(path);
+    // }
   };
+
+  useEffect(async () => {
+    if (fetchUserData){
+      if (fetchUserData.banned) {
+        setBanned(true);
+        console.log("setting ban true")
+      } else {
+        //redirect to the loan page
+        const path = `/loan/${params.id}`;
+        navigate(path);
+      }
+    }
+  }, [fetchUserData])
 
   // // get current Trolley ID
   // const { value, setValue } = useContext(TrolleyContext); 

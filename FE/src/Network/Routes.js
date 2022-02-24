@@ -1,28 +1,31 @@
 const user = "user/"
+const trolley = "trolley/"
+const loan = "loan/"
+
 const Routes = {
     // User
     user: {
-        user: "user/",
+        user: user,
         signInWithPhoneNumber: `${user}signInWithPhoneNumber`,
         verifyOTP: `${user}verifyOTP`,
         createUser: `${user}createUser`,
-        banUser: `${user}/banUser`,
+        banUser: `${user}banUser`,
     },
 
     // Trolley
     trolley: {
-        fetch: "trolley/",
-        createTrolley: `${fetch}/createTrolley`,
-        setShouldUnlock: `${fetch}/setShouldUnlock`,
-        setIsUnlocked: `${fetch}/setIsUnlocked`,
-        returnTrolley: `${fetch}/returnTrolley`,
+        trolley: trolley,
+        createTrolley: `${trolley}createTrolley`,
+        setShouldUnlock: `${trolley}setShouldUnlock`,
+        setIsUnlocked: `${trolley}setIsUnlocked`,
+        returnTrolley: `${trolley}returnTrolley`,
     },
 
     // Loans
     loan: {
-        fetch: "loan/",
-        createLoan: `${fetch}createLoan`,
-        endLoan: `${fetch}endLoan`
+        loan: loan,
+        createLoan: `${loan}createLoan`,
+        endLoan: `${loan}endLoan`
     }
 }
 export default Routes;

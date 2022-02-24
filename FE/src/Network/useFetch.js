@@ -7,6 +7,7 @@ const useFetch = (method, route, body, callOnLoad = true) => {
   const [error, setError] = useState(null);
 
   const baseURL = "https://stormy-stream-68782.herokuapp.com";
+  // const baseURL = "http://localhost:4000";
 
   const refetch = useCallback( async () => {
     setLoading(true);
@@ -19,6 +20,7 @@ const useFetch = (method, route, body, callOnLoad = true) => {
       } else if (method === "PUT") {
         res = await axios.put(`${baseURL}/${route}`, body);
       }
+      console.log(res.data)
       setData(res.data);
       setLoading(false);
     } catch (err) {
