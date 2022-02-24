@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+// import { TrolleyContext } from "../Context/TrolleyProvider";
 
 import LoadingModal from "../Loading/LoadingModal";
 
@@ -22,6 +24,9 @@ export default function LandingPage() {
   const { fetchUserData, fetchUserLoading, fetchUserError, setFetchUserError, performFetchUser } =
     useFetch(FetchMethod.get, Routes.user.fetch+userObject.userID);
 
+  // useParams save trolleyID into a variable 
+  const params = useParams();
+  
   const checkBanned = async () => {
     // const DBUser = await useFetch("GET", `user/${userObject.userID}`, {
     //   userID: userObject.userID,
@@ -31,12 +36,18 @@ export default function LandingPage() {
       setBanned(true);
     } else {
       //redirect to the loan page
-      const path = "/loan";
+      const path = `/loan/${params.id}`;
       // navigate(path);
     }
   };
 
+  // // get current Trolley ID
+  // const { value, setValue } = useContext(TrolleyContext); 
+
   useEffect(() => {
+    // // useContext save trolleyID params.id
+    // setValue(params.id)
+    
     //check if user is logged in
     if (userObject.userID && userObject.userName) {
       console.log("BANNED?", banned);
@@ -54,7 +65,7 @@ export default function LandingPage() {
   }
 
   const loginPageHandler = () => {
-    const path = "/login";
+    const path = `/login/${params.id}`;
     navigate(path);
   };
 

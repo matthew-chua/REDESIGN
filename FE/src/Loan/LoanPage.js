@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import classes from "./LoanPage.module.css";
+// import { TrolleyContext } from "../Context/TrolleyProvider";
+import { useParams } from "react-router";
 
 import LoadingModal from "../Loading/LoadingModal";
 
@@ -20,7 +22,15 @@ export default function LoanPage() {
   // const [loanObjectState, setLoanObjectState] = useState({});
   const [snake, setSnake] = useState(false);
 
-  const TID = "1";
+  // // get Trolley ID 
+  // const { value, setValue } = useContext(TrolleyContext);
+
+  // useParams save trolleyID into a variable 
+  const params = useParams();
+
+  // const TID = "1"; 
+  const TID = params.id; 
+  console.log("TrolleyID: ", TID)
 
   // ==== Network Hooks ====
 
@@ -44,7 +54,7 @@ export default function LoanPage() {
     fetchTrolleyError,
     setFetchTrolleyError,
     performFetchTrolley,
-  ] = useFetch(FetchMethod.get, Routes.trolley.fetch, null, false);
+  ] = useFetch(FetchMethod.get, Routes.trolley.fetch+params.id, null, false);
 
   // Fetch Loan
   const [
@@ -53,7 +63,7 @@ export default function LoanPage() {
     fetchLoanError,
     setFetchLoanError,
     performFetchLoan,
-  ] = useFetch(FetchMethod.get, Routes.loan.fetch, null, false);
+  ] = useFetch(FetchMethod.get, Routes.loan.fetch+params.id, null, false);
 
   const isLoading = () => {
     if (createLoanLoading || fetchTrolleyLoading || fetchLoanLoading) {
@@ -65,7 +75,7 @@ export default function LoanPage() {
   
   const trolleyIsBorrowed = () => {
     return (
-      fetchTrolleyData.shouldUnlock === true ||
+      fetchTrolleyData.shouldUnlock === true &&
       fetchTrolleyData.isUnlocked === true
     );
   };
@@ -74,22 +84,30 @@ export default function LoanPage() {
     //make sure trolley is not borrowed
     // const trolley = await useFetch("GET", `trolley/${TID}`, {});
     await performFetchTrolley();
+    console.log("here")
+    console.log(fetchTrolleyData)
+    console.log(trolleyIsBorrowed())
 
-    if (trolleyIsBorrowed()) {
-      setLoanState("error");
-      return;
-    }
+    // // create loan
+    // await performCreateLoan();
+    // // const loan = await useFetch("POST", "loan/createLoan", {
+    // //   userID: user.userID,
+    // //   trolleyID: TID,
+    // // });
+    // console.log("perform create loan")
 
-    // create loan
-    await performCreateLoan();
-    // const loan = await useFetch("POST", "loan/createLoan", {
-    //   userID: user.userID,
-    //   trolleyID: TID,
-    // });
-
-    // setLoanObjectState(createLoanData);
-    setLoanState("unlocked");
+    // // setLoanObjectState(createLoanData);
+    // setLoanState("unlocked");
+    // console.log("state: ", loanState)
   };
+
+  useEffect(() => {
+    if (fetchTrolleyData && trolleyIsBorrowed()){
+      console.log("fetching")
+      setLoanState("error")
+      console.log("error page")
+    }
+  }, [fetchTrolleyData])
 
   const returnCheckHandler = async () => {
     // const currentLoan = await useFetch("GET", `loan/${createLoanData.loanID}`);
@@ -126,7 +144,7 @@ export default function LoanPage() {
         {loanState === "unlocked" && (
           <div className={classes.innerContent}>
             <p className={classes.icon} onClick={returnCheckHandler}>
-              <i class="fa fa-unlock"></i>
+              <i className="fa fa-unlock"></i>
             </p>
             <h1>{createLoanData.borrowDate.substring(0, 10)}</h1>
             <h1>{createLoanData.borrowDate.substring(11, 16)}</h1>
@@ -140,7 +158,7 @@ export default function LoanPage() {
         {loanState === "error" && (
           <div className={classes.innerContent}>
             <p className={classes.iconError}>
-              <i class="fa fa-lock"></i>
+              <i className="fa fa-lock"></i>
             </p>
             <p>Error, trolley is already unlocked.</p>
             <p>Please try another trolley.</p>

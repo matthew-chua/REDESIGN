@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
 
 import LoadingModal from "../Loading/LoadingModal";
 
@@ -21,6 +22,9 @@ export default function LoginPage() {
   // const [OTPError, setOTPError] = useState(false);
   // const [OTPRes, setOTPRes] = useState();
 
+  // useParams save trolleyID into a variable 
+  const params = useParams();
+
   const [userState, setUserState] = useState({
     name: "",
     phoneNumber: "",
@@ -39,7 +43,7 @@ export default function LoginPage() {
     FetchMethod.post,
     Routes.user.signInWithPhoneNumber,
     signInBody,
-    false
+    false 
   );
 
   // Verify OTP
@@ -147,7 +151,7 @@ export default function LoginPage() {
       localStorage.setItem("userID", createUserData.userID);
       localStorage.setItem("userName", createUserData.name);
       //redirect to the loan page once done
-      const path = Routes.loan.fetch;
+      const path = Routes.loan.fetch+params.id;
       navigate(path);
     }
   }, [createUserData]);
