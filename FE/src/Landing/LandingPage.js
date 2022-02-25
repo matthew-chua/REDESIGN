@@ -47,7 +47,7 @@ export default function LandingPage() {
       if (fetchUserData.banned) {
         setBanned(true);
         console.log("setting ban true")
-      } else {
+      } else if (params.id){
         //redirect to the loan page
         const path = `/loan/${params.id}`;
         navigate(path);
