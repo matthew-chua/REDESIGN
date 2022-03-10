@@ -18,13 +18,15 @@ const createLoan = (req, res) => {
     borrowDate: date,
     returned: false,
   });
-
-  Trolley.findOneAndUpdate(trolleyID, true, options)
+  const id = { trolleyID: trolleyID };
+  const update = { shouldUnlock: true };
+  Trolley.findOneAndUpdate(id, update, options)
     .then((result) => {
       if (!result) {
         res.status(400).send({ error: Constants.trolleyNotFound });
         return;
       }
+      console.log("success", result)
     })
     .catch((err) => {
       res.status(400).send({ error: Constants.invalidRequest });

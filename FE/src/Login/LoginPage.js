@@ -152,28 +152,32 @@ export default function LoginPage() {
       localStorage.setItem("userName", createUserData.name);
       //redirect to the loan page once done
       const path = Routes.loan.loan+params.id;
+      console.log("path: ", path)
       navigate(path);
     }
   }, [createUserData]);
 
   const isPageOne = () => {
+    // return signInData === null;
     return signInData === null;
+    // return false
   };
 
   const isPageTwo = () => {
     // Don't remove the comment below -- actual logic when no longer testing
-    return signInData && verifyOTPData === null;
-
+    // return signInData && verifyOTPData === null;
+    // return false
     // Remove this when no longer testing
-    // return signInData !== null && pageState !== 3;
+    return signInData !== null && pageState !== 3;
   };
 
   const isPageThree = () => {
     // Don't remove the comment below -- actual logic when no longer testing
-    return verifyOTPData && createUserData === null;
+    // return verifyOTPData && createUserData === null;
+    // return true
 
     // Remove this when no longer testing
-    // return pageState === 3;
+    return pageState === 3;
   };
 
   return (
