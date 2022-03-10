@@ -1,5 +1,6 @@
 const Constants = require('../Common/Constants');
 const Loan = require("./loanSchema");
+const Trolley = require("../Trolley/trolleySchema");
 
 const createLoan = (req, res) => {
 
@@ -7,13 +8,27 @@ const createLoan = (req, res) => {
 
   const loanID = Math.random().toString(24).slice(2);
 
+  const trolleyID = req.body.trolleyID
+  const options = { new: true };
+
   const loan = new Loan({
     userID: req.body.userID,
     loanID: loanID,
-    trolleyID: req.body.trolleyID,
+    trolleyID: trolleyID,
     borrowDate: date,
     returned: false,
   });
+
+  Trolley.findOneAndUpdate(trolleyID, true, options)
+    .then((result) => {
+      if (!result) {
+        res.status(400).send({ error: Constants.trolleyNotFound });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(400).send({ error: Constants.invalidRequest });
+    });
 
   loan
     .save()
