@@ -129,7 +129,7 @@ export default function LoanPage() {
     //   setSnake(true); // LOL
     // }
     console.log("fetch loan called")
-    await performFetchLoan();
+    await performFetchLoan()
   };
   console.log("snake: ", snake)
 
@@ -144,6 +144,20 @@ export default function LoanPage() {
         console.log(snake)
       }
     }
+
+
+    // if (fetchTrolleyData){
+    //   if (trolleyIsBorrowed()){
+    //     setSnake(true);
+    //   }
+    //   else {
+    //     setLoanState("returned");
+    //     //make the endloan api call
+    //     console.log("ENDING LOAN");
+    //   }
+    // }
+
+
   }, [fetchLoanData])
   
   // const backtohomeHandler = () => {

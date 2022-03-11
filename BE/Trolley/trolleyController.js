@@ -1,4 +1,5 @@
 const Trolley = require("./trolleySchema");
+const Loan = require("../Loan/loanSchema");
 const Constants = require("../Common/Constants");
 
 let clients = [];
@@ -51,7 +52,7 @@ const fetchTrolleyHandler = (req, res) => {
 const fetchTrolleyStreamHandler = (req, res) => {
   const headers = {
     "Content-Type": "text/event-stream",
-    "Connection": "keep-alive",
+    Connection: "keep-alive",
     "Cache-Control": "no-cache",
   };
   res.writeHead(200, headers);
@@ -147,7 +148,29 @@ const returnTrolleyHandler = (req, res) => {
     isUnlocked: false,
     shouldUnlock: false,
   };
+
+  const findLoan = {
+    trolleyID: req.body.trolleyID,
+    returned: false,
+  };
+
+  const loanUpdate = {
+    returned: true,
+  };
+
   const options = { new: true };
+
+  Loan.findOneAndUpdate(findLoan, loanUpdate, options)
+    .then((result) => {
+      if (!result) {
+        res.status(400).send({ error: Constants.trolleyNotFound });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(400).send({ error: Constants.invalidRequest });
+      return;
+    });
 
   Trolley.findOneAndUpdate(trolleyID, returned, options)
     .then((result) => {
