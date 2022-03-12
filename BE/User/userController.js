@@ -22,7 +22,7 @@ const signInWithPhoneNumberHandler = (req, res) => {
     originator: "Verify OTP",
     Reference: "",
     type: "sms",
-    template: "yo matthew the code is *%token* pls tell me this works",
+    template: "Your SmartTrolley pin is *%token*.",
     timeout: "120",
     tokenLength: "6",
   };

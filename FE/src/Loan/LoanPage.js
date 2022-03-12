@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import classes from "./LoanPage.module.css";
-// import { TrolleyContext } from "../Context/TrolleyProvider";
-import { Navigate, useParams } from "react-router";
+import { useParams } from "react-router";
 
 import LoadingModal from "../Loading/LoadingModal";
 
@@ -16,21 +15,13 @@ export default function LoanPage() {
     userID: localStorage.getItem("userID"),
   });
 
-  //represents state of loan
-  //can be "locked", "unlocked" or "returned"
-  const [loanState, setLoanState] = useState("locked");
-  // const [loanObjectState, setLoanObjectState] = useState({});
-  const [snake, setSnake] = useState(false);
+  // true when the user clicks the return lock button
+  const [userDidClickReturn, setUserDidClickReturn] = useState(false);
 
-  // // get Trolley ID 
-  // const { value, setValue } = useContext(TrolleyContext);
-
-  // useParams save trolleyID into a variable 
+  // useParams save trolleyID into a variable
   const params = useParams();
 
-  // const TID = "1"; 
-  const TID = params.id; 
-  console.log("TrolleyID: ", TID)
+  const TID = params.id;
 
   // ==== Network Hooks ====
 
@@ -54,7 +45,12 @@ export default function LoanPage() {
     fetchTrolleyError,
     setFetchTrolleyError,
     performFetchTrolley,
-  ] = useFetch(FetchMethod.get, Routes.trolley.trolley+params.id, null, false);
+  ] = useFetch(
+    FetchMethod.get,
+    Routes.trolley.trolley + params.id,
+    null,
+    false
+  );
 
   // Fetch Loan
   const [
@@ -63,116 +59,88 @@ export default function LoanPage() {
     fetchLoanError,
     setFetchLoanError,
     performFetchLoan,
-  ] = useFetch(FetchMethod.get, Routes.loan.loan+params.id, null, false);
+  ] = useFetch(
+    FetchMethod.get,
+    Routes.loan.loan + params.id + "/" + user.userID,
+    null,
+    false
+  );
 
-  console.log(Routes.loan.loan+params.id)
+  // ====== Derived States ======
+  const isLoading =
+    createLoanLoading || fetchTrolleyLoading || fetchLoanLoading;
+  const lockedState =
+    fetchTrolleyData &&
+    !fetchTrolleyData.shouldUnlock &&
+    !fetchTrolleyData.isUnlocked &&
+    !userDidClickReturn;
+  const unlockedState = fetchLoanData && !fetchLoanData.returned;
+  const errorState =
+    fetchTrolleyData &&
+    (fetchTrolleyData.shouldUnlock || fetchTrolleyData.isUnlocked) &&
+    !fetchLoanData && !isLoading;
+  const returnedState =
+    fetchTrolleyData &&
+    !fetchTrolleyData.shouldUnlock &&
+    !fetchTrolleyData.isUnlocked &&
+    userDidClickReturn;
+  const lockWithoutReturningState =
+    fetchLoanData && !fetchLoanData.returned && userDidClickReturn;
+  console.log("fetchLoanData", fetchLoanData);
 
-  const isLoading = () => {
-    if (createLoanLoading || fetchTrolleyLoading || fetchLoanLoading) {
-      return true; 
-    } else {
-      return false;
-    }
-  }
-  
-  const trolleyIsBorrowed = () => {
-    return (
-      fetchTrolleyData.shouldUnlock === true &&
-      fetchTrolleyData.isUnlocked === true
-    );
-  };
-
+  // ========= Handlers ==========
   const unlockHandler = async () => {
     //make sure trolley is not borrowed
-    // const trolley = await useFetch("GET", `trolley/${TID}`, {});
-    await performFetchTrolley();
-    console.log("here")
-    console.log(fetchTrolleyData)
-
-    // // create loan
-    // await performCreateLoan();
-    // // const loan = await useFetch("POST", "loan/createLoan", {
-    // //   userID: user.userID,
-    // //   trolleyID: TID,
-    // // });
-    // console.log("perform create loan")
-
-    // // setLoanObjectState(createLoanData);
-    // setLoanState("unlocked");
-    // console.log("state: ", loanState)
+    await performCreateLoan();
   };
 
-  useEffect(async () => {
-    if (fetchTrolleyData){
-      if (trolleyIsBorrowed()){
-        console.log("fetching")
-        setLoanState("error")
-        console.log("error page")
-      }
-      else {
-        await performCreateLoan();
-      }
-    }
-  }, [fetchTrolleyData])
+  // ========== Network ===========
+  useEffect(() => {
+    performFetchTrolley();
+    performFetchLoan();
+    // start by fetching trolley.
+    // if trolley is borrowed
+    // if borrowed, check if its by user -- using loan
+    // if by user, set unlocked state
+    // otherwise, set error
+
+    // on click of borrow,
+    // create loan
+    // if success, set unlocked state
+
+    // on click of return , check if trolley is returned
+    // if trolley returned, set returned
+
+    // states:
+    // locked -- when trolley returned => fetchTrolleyData.returned == true
+    // returned -- when trolley returned + borrowed previously
+    // => fetchTrolleyData.returned = true && returnedState == true
+
+    // error -- trolley borrowed
+    // unlocked -- when trolley borrowed + user borrowed it
+  }, []);
 
   useEffect(async () => {
-    if (createLoanData){
-      setLoanState("unlocked");
-      }
-  }, [createLoanData])
+    if (createLoanData) {
+      performFetchTrolley();
+      performFetchLoan();
+    }
+  }, [createLoanData]);
 
   const returnCheckHandler = async () => {
-    // const currentLoan = await useFetch("GET", `loan/${createLoanData.loanID}`);
-    // if (currentLoan.data.returned) {
-    //   setLoanState("returned");
-    // } else {
-    //   setSnake(true); // LOL
-    // }
-    console.log("fetch loan called")
-    await performFetchLoan()
+    setUserDidClickReturn(true);
+    performFetchTrolley();
+    performFetchLoan();
   };
-  console.log("snake: ", snake)
-
-  useEffect(async () => {
-    if (fetchLoanData){
-      console.log("fetching loan data")
-      if (fetchLoanData.returned) {
-        setLoanState("returned");
-        console.log("returned true")
-      } else {
-        setSnake(true); // LOL
-        console.log(snake)
-      }
-    }
-
-
-    // if (fetchTrolleyData){
-    //   if (trolleyIsBorrowed()){
-    //     setSnake(true);
-    //   }
-    //   else {
-    //     setLoanState("returned");
-    //     //make the endloan api call
-    //     console.log("ENDING LOAN");
-    //   }
-    // }
-
-
-  }, [fetchLoanData])
-  
-  // const backtohomeHandler = () => {
-  //   const path = `/home/${params.id}`;
-  //   navigate(path);
-  // }
 
   return (
     <div className={classes.root}>
-      <LoadingModal isLoading={isLoading()}/>
-      {loanState !== "returned" && <h1>Welcome, {user.name}!</h1>}
-      {loanState === "returned" && <h1>Thank you, {user.name}!</h1>}
+      <LoadingModal isLoading={isLoading} />
+      {!returnedState && <h1>Welcome, {user.name}!</h1>}
+      {returnedState && <h1>Thank you, {user.name}!</h1>}
 
       <div className={classes.content}>
-        {loanState === "locked" && (
+        {lockedState && (
           <div className={classes.innerContent}>
             <p className={classes.icon}>
               <i className="fa fa-lock" onClick={unlockHandler}></i>
@@ -181,21 +149,29 @@ export default function LoanPage() {
           </div>
         )}
 
-        {loanState === "unlocked" && (
+        {unlockedState && (
           <div className={classes.innerContent}>
             <p className={classes.icon} onClick={returnCheckHandler}>
               <i className="fa fa-unlock"></i>
             </p>
-            <h1>{createLoanData.borrowDate.substring(0, 10)}</h1>
-            <h1>{createLoanData.borrowDate.substring(11, 16)}</h1>
+            <h1>{fetchLoanData.borrowDate.substring(0, 10)}</h1>
+            <h1>{fetchLoanData.borrowDate.substring(11, 16)}</h1>
             <h3>Ready for use!</h3>
             <p>Please return your trolley within 24 hours.</p>
             <p>Tap the lock above once you've returned your trolley!</p>
-            {snake && <p>CB U NEVER RETURN YET DONT LIE</p>}
+            {lockWithoutReturningState && (
+              <p
+                className={`${classes.errorText} ${
+                  lockWithoutReturningState ? classes.errorShake : ""
+                }`}
+              >
+                Oops, looks like the trolley has not been returned! Please try
+                again
+              </p>
+            )}
           </div>
         )}
-
-        {loanState === "error" && (
+        {errorState && (
           <div className={classes.innerContent}>
             <p className={classes.iconError}>
               <i className="fa fa-lock"></i>
@@ -203,19 +179,27 @@ export default function LoanPage() {
             <p>Error, trolley is already unlocked.</p>
             <p>Please try another trolley.</p>
             <p>Close this page and scan another QR Code!</p>
-            {/* <button onClick={backtohomeHandler}>Back to Home</button> */}
           </div>
         )}
 
-        {loanState === "returned" && (
+        {returnedState && (
           <div className={classes.innerContent}>
             <p className={classes.iconReturned}>
               <i class="fa fa-lock"></i>
             </p>
             <h3>Trolley Returned!</h3>
-            <p>You can close the page</p>
-            <p>Thank you for returning the trolley
-              Best citizen EVER</p>
+            <p>
+              Thank you for returning the trolley! <br />
+              You can close the page
+            </p>
+            <p></p>
+            <button
+              onClick={() => {
+                setUserDidClickReturn(false);
+              }}
+            >
+              Borrow again!
+            </button>
           </div>
         )}
       </div>

@@ -16,7 +16,7 @@ router.post("/createLoan", createLoan);
 router.put("/endLoan", endLoan);
 
 // Fetch Loan
-router.get("/:loanID", getLoan);
+router.get("/:loanID/:userID", getLoan);
 
 
 module.exports = router;

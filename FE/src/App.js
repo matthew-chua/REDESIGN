@@ -22,8 +22,9 @@ function App() {
         <Route exact path="login/:id" element={<LoginPage/>} />
         <Route exact path="loan/:id" element={<LoanPage/>} />
         <Route exact path="error" element={<ErrorPage/>} />
+        <Route exact path="home/" element={<h1>Welcome!</h1>} />
         {/* <Route exact path="load" element={<LoadingModal/>} /> */}
-        <Route path="/*" element={<Navigate to='/error'/>}/>        
+        <Route path="/*" element={<Navigate to='/home'/>}/>        
       </Routes>
     </Router>
     // </TrolleyProvider>

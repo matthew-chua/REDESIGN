@@ -56,7 +56,9 @@ const endLoan = (req, res) => {
 };
 
 const getLoan = (req, res) => {
-  const trolleyID = { trolleyID: req.params.loanID };
+  const trolleyID = { trolleyID: req.params.loanID, 
+                      userID: req.params.userID,
+                      returned: false };
 
   Loan.findOne(trolleyID)
     .then((result) => {
