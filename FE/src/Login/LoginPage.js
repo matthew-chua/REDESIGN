@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 
 import LoadingModal from "../Loading/LoadingModal";
+import logo from "../Assets/LOGO.png";
 
 import Button from "../Common/Button";
 import Checkbox from "../Common/Checkbox";
@@ -22,7 +23,7 @@ export default function LoginPage() {
   // const [OTPError, setOTPError] = useState(false);
   // const [OTPRes, setOTPRes] = useState();
 
-  // useParams save trolleyID into a variable 
+  // useParams save trolleyID into a variable
   const params = useParams();
 
   const [userState, setUserState] = useState({
@@ -43,7 +44,7 @@ export default function LoginPage() {
     FetchMethod.post,
     Routes.user.signInWithPhoneNumber,
     signInBody,
-    false 
+    false
   );
 
   // Verify OTP
@@ -73,11 +74,11 @@ export default function LoginPage() {
 
   const isLoading = () => {
     if (signInLoading || verifyOTPLoading || createUserLoading) {
-      return true; 
+      return true;
     } else {
       return false;
     }
-  }
+  };
 
   const inputNumberHandler = (e) => {
     //forgot how to do it the proper way
@@ -178,9 +179,10 @@ export default function LoginPage() {
 
   return (
     <div className={classes.root}>
-      <LoadingModal isLoading={isLoading()}/>
+      <LoadingModal isLoading={isLoading()} />
       {isPageOne() && (
         <div className={classes.page1root}>
+          <img src={logo} className={classes.logo} />
           <h1> Enter your mobile number</h1>
           <h3>We will send you a confirmation code</h3>
           <TextField
@@ -199,11 +201,13 @@ export default function LoginPage() {
             By signing up, you agree with our <br /> <a>Terms and Conditions</a>{" "}
             and <a>Privacy Policy</a>
           </p>
+          <p className={classes.footer}>&copy; Super Mario Bros.</p>
         </div>
       )}
 
       {isPageTwo() && (
         <div className={classes.page2root}>
+          <img src={logo} className={classes.logo} />
           <h1>Enter code sent to your number</h1>
           <h3>
             We sent the code to <br />
@@ -223,11 +227,13 @@ export default function LoginPage() {
           <p className={classes.bottomText}>
             Didn't receive code? <a>Resend</a>
           </p>
+          <p className={classes.footer}>&copy; Super Mario Bros.</p>
         </div>
       )}
 
       {isPageThree() && (
         <div className={classes.page3root}>
+          <img src={logo} className={classes.logo} />
           <h1>Create Account</h1>
           <h3>Enter your full name</h3>
           <TextField
@@ -240,6 +246,7 @@ export default function LoginPage() {
           <Button onClickHandler={createUserHandler} isDisabled={disabled}>
             Done
           </Button>
+          <p className={classes.footer}>&copy; Super Mario Bros.</p>
         </div>
       )}
     </div>

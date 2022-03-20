@@ -2,19 +2,29 @@
   display: flex;
   flex-direction: column;
 }
+.logo{
+  padding-bottom: 1rem;
+}
+.footer{
+  position: absolute;
+  bottom: 0;
+}
 .icon {
+  margin-top: 2rem;
   font-size: 50vw;
   color: var(--darkBlue);
   margin-bottom: 1rem;
 }
 .iconError {
+  margin-top: 2rem;
   font-size: 50vw;
-  color: red;
+  color: #F67F77;
   margin-bottom: 1rem;
 }
 .iconReturned {
+  margin-top: 2rem;
   font-size: 50vw;
-  color: green;
+  color: var(--brightGreen);
   margin-bottom: 1rem;
 }
 .content {

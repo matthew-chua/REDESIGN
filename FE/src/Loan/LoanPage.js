@@ -3,6 +3,7 @@ import classes from "./LoanPage.module.css";
 import { useParams } from "react-router";
 
 import LoadingModal from "../Loading/LoadingModal";
+import logo from "../Assets/LOGO.png";
 
 // Network Imports
 import useFetch from "../Network/useFetch";
@@ -133,10 +134,12 @@ export default function LoanPage() {
     performFetchLoan();
   };
 
+
   return (
     <div className={classes.root}>
       <LoadingModal isLoading={isLoading} />
-      {!returnedState && <h1>Welcome, {user.name}!</h1>}
+      <img src={logo} className={classes.logo}/>
+      {!returnedState && <h1>Welcome, <br/>{user.name}!</h1>}
       {returnedState && <h1>Thank you, {user.name}!</h1>}
 
       <div className={classes.content}>
@@ -145,7 +148,8 @@ export default function LoanPage() {
             <p className={classes.icon}>
               <i className="fa fa-lock" onClick={unlockHandler}></i>
             </p>
-            <p>Press to unlock!</p>
+            <p>Tap to unlock!</p>
+            <p className={classes.footer}>&copy; Super Mario Bros.</p>
           </div>
         )}
 
@@ -169,6 +173,7 @@ export default function LoanPage() {
                 again
               </p>
             )}
+            <p className={classes.footer}>&copy; Super Mario Bros.</p>
           </div>
         )}
         {errorState && (
@@ -200,6 +205,7 @@ export default function LoanPage() {
             >
               Borrow again!
             </button>
+            <p className={classes.footer}>&copy; Super Mario Bros.</p>
           </div>
         )}
       </div>

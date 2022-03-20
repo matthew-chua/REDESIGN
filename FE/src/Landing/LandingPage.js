@@ -7,6 +7,8 @@ import LoadingModal from "../Loading/LoadingModal";
 
 // Components
 import Button from "../Common/Button";
+import logo from "../Assets/LOGO.png";
+import classes from "./LandingPage.module.css";
 
 // Network Imports
 import useFetch from "../Network/useFetch";
@@ -21,12 +23,17 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [banned, setBanned] = useState(false);
 
-  const [ fetchUserData, fetchUserLoading, fetchUserError, setFetchUserError, performFetchUser ] =
-    useFetch(FetchMethod.get, Routes.user.user+userObject.userID);
+  const [
+    fetchUserData,
+    fetchUserLoading,
+    fetchUserError,
+    setFetchUserError,
+    performFetchUser,
+  ] = useFetch(FetchMethod.get, Routes.user.user + userObject.userID);
 
-  // useParams save trolleyID into a variable 
+  // useParams save trolleyID into a variable
   const params = useParams();
-  
+
   const checkBanned = async () => {
     // const DBUser = await useFetch("GET", `user/${userObject.userID}`, {
     //   userID: userObject.userID,
@@ -43,25 +50,25 @@ export default function LandingPage() {
   };
 
   useEffect(async () => {
-    if (fetchUserData){
+    if (fetchUserData) {
       if (fetchUserData.banned) {
         setBanned(true);
-        console.log("setting ban true")
-      } else if (params.id){
+        console.log("setting ban true");
+      } else if (params.id) {
         //redirect to the loan page
         const path = `/loan/${params.id}`;
         navigate(path);
       }
     }
-  }, [fetchUserData])
+  }, [fetchUserData]);
 
   // // get current Trolley ID
-  // const { value, setValue } = useContext(TrolleyContext); 
+  // const { value, setValue } = useContext(TrolleyContext);
 
   useEffect(() => {
     // // useContext save trolleyID params.id
     // setValue(params.id)
-    
+
     //check if user is logged in
     if (userObject.userID && userObject.userName) {
       console.log("BANNED?", banned);
@@ -72,11 +79,11 @@ export default function LandingPage() {
 
   const isLoading = () => {
     if (fetchUserLoading) {
-      return true; 
+      return true;
     } else {
       return false;
     }
-  }
+  };
 
   const loginPageHandler = () => {
     const path = `/login/${params.id}`;
@@ -84,14 +91,18 @@ export default function LandingPage() {
   };
 
   return (
-    <div>
-      <LoadingModal isLoading={isLoading()}/>
+    <div className={classes.root}>
+      <LoadingModal isLoading={isLoading()} />
 
       {!banned && (
         <div>
-          <h1>Sup bro</h1>
-          <h3>Think you needa login</h3>
-          <Button onClickHandler={loginPageHandler}>Login</Button>
+          <h1>Welcome to</h1>
+          <img src={logo} className={classes.logo} />
+          <p>
+            Seems like this is your first time, click the button below to create
+            an account!
+          </p>
+          <Button onClickHandler={loginPageHandler}>Create Account</Button>
         </div>
       )}
 
@@ -100,6 +111,7 @@ export default function LandingPage() {
           <h1>YOU ARE BANNED</h1>
         </div>
       )}
+      <p className={classes.footer}>&copy; Super Mario Bros.</p>
     </div>
   );
 }
