@@ -192,6 +192,7 @@ export default function LoginPage() {
             error={signInError}
             setError={setSignInError}
             errorText="Invalid phone number entered, please try again!"
+            numberInput={true}
           />
           <Checkbox text={"Stay signed in"} initialState={true} />
           <Button onClickHandler={page1NextHandler} isDisabled={disabled}>
@@ -220,6 +221,7 @@ export default function LoginPage() {
             error={verifyOTPError}
             setError={setVerifyOTPError}
             errorText="Wrong code entered! Please try again."
+            numberInput={true}
           ></TextField>
           <Button onClickHandler={page2NextHandler} isDisabled={disabled}>
             Verify

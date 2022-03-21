@@ -3,6 +3,7 @@
   flex-direction: column;
 }
 .logo{
+  width: 80vw;
   padding-bottom: 1rem;
 }
 .footer{
