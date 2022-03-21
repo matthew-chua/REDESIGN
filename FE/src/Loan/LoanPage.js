@@ -161,6 +161,7 @@ export default function LoanPage() {
             <h1>{fetchLoanData.borrowDate.substring(0, 10)}</h1>
             <h1>{fetchLoanData.borrowDate.substring(11, 16)}</h1>
             <h3>Ready for use!</h3>
+            <p>Remove the lock once you see the green light!</p>
             <p>Please return your trolley within 24 hours.</p>
             <p>Tap the lock above once you've returned your trolley!</p>
             {lockWithoutReturningState && (
@@ -195,9 +196,9 @@ export default function LoanPage() {
             <h3>Trolley Returned!</h3>
             <p>
               Thank you for returning the trolley! <br />
-              You can close the page
+              The green light should now be off.
             </p>
-            <p></p>
+            <p>You can now close the page.</p>
             <button
               onClick={() => {
                 setUserDidClickReturn(false);
