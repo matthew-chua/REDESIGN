@@ -244,6 +244,7 @@ export default function LoginPage() {
             error={createUserError}
             setError={setCreateUserError}
             errorText="Error: could not create account"
+            numberInput={false}
           />
           <Button onClickHandler={createUserHandler} isDisabled={disabled}>
             Done

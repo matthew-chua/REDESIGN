@@ -134,13 +134,19 @@ export default function LoanPage() {
     performFetchLoan();
   };
 
+  console.log("TIME", Number(fetchLoanData.borrowDate.substring(11,13))+8)
+
+
+const hour = Number(fetchLoanData.borrowDate.substring(11,13))+8
+
+
 
   return (
     <div className={classes.root}>
       <LoadingModal isLoading={isLoading} />
       <img src={logo} className={classes.logo}/>
       {!returnedState && <h1>Welcome, <br/>{user.name}!</h1>}
-      {returnedState && <h1>Thank you, {user.name}!</h1>}
+      {returnedState && <h1>Thank you, <br/>{user.name}!</h1>}
 
       <div className={classes.content}>
         {lockedState && (
@@ -149,7 +155,7 @@ export default function LoanPage() {
               <i className="fa fa-lock" onClick={unlockHandler}></i>
             </p>
             <p>Tap to unlock!</p>
-            <p className={classes.footer}>&copy; Super Mario Bros.</p>
+            {/* <p className={classes.footer}>&copy; Super Mario Bros.</p> */}
           </div>
         )}
 
@@ -158,8 +164,8 @@ export default function LoanPage() {
             <p className={classes.icon} onClick={returnCheckHandler}>
               <i className="fa fa-unlock"></i>
             </p>
-            <h1>{fetchLoanData.borrowDate.substring(0, 10)}</h1>
-            <h1>{fetchLoanData.borrowDate.substring(11, 16)}</h1>
+            <h3>{fetchLoanData.borrowDate.substring(0, 10)} -   {hour}:{fetchLoanData.borrowDate.substring(14, 16)}</h3>
+            {/* <h3>{fetchLoanData.borrowDate.substring(11, 16)}</h3> */}
             <h3>Ready for use!</h3>
             <p>Remove the lock once you see the green light!</p>
             <p>Please return your trolley within 24 hours.</p>
@@ -174,7 +180,7 @@ export default function LoanPage() {
                 again
               </p>
             )}
-            <p className={classes.footer}>&copy; Super Mario Bros.</p>
+            {/* <p className={classes.footer}>&copy; Super Mario Bros.</p> */}
           </div>
         )}
         {errorState && (
@@ -206,10 +212,12 @@ export default function LoanPage() {
             >
               Borrow again!
             </button>
-            <p className={classes.footer}>&copy; Super Mario Bros.</p>
+            {/* <p className={classes.footer}>&copy; Super Mario Bros.</p> */}
           </div>
         )}
+      <p className={classes.footer}>&copy; Super Mario Bros.</p>
       </div>
+
     </div>
   );
 }

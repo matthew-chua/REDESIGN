@@ -1,17 +1,20 @@
 .root {
   display: flex;
   flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 .logo{
   width: 80vw;
   padding-bottom: 1rem;
 }
 .footer{
-  position: absolute;
+  position: relative;
   bottom: 0;
 }
 .icon {
-  margin-top: 2rem;
+  margin-top: 0.1rem;
   font-size: 50vw;
   color: var(--darkBlue);
   margin-bottom: 1rem;

@@ -17,7 +17,7 @@ export default function TextField(props) {
         value={props.value}
         placeholder={props.placeholder}
         pattern={props.numberInput ? "[0-9]*" : null} 
-        inputmode={props.numberInput ? "numeric" : "text"}
+        inputmode={props.numberInput ? "tel" : "text"}
       />
       {props.error && <p className={classes.errorText}>{props.errorText}</p>}
     </div>
